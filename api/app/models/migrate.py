@@ -15,7 +15,7 @@ db.create_tables([User,
                   Place,
                   PlaceBook,
                   Amenity,
-                  PlaceAmenities])
+                  PlaceAmenities], safe=True)
 
 test_record=User(email='foo', password='foo', first_name='foo',last_name='foo')
 test_record.save()
