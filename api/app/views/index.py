@@ -10,8 +10,8 @@ import peewee
 @app.route('/', methods=['GET'])
 def index():
     return json_response(status = 'OK',
-                utc_time = datetime.utcnow().strftime('%Y/%m/%d %H:%M:%S'),
-                time = datetime.now().strftime('%Y/%m/%d %H:%M:%S'))
+                utc_time = datetime.utcnow().strftime('%d/%m/%Y %H:%M:%S'),
+                time = datetime.now().strftime('%d/%m/%Y %H:%M:%S'))
 
 def before_request():
     peewee.models.database.connect()
