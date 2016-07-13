@@ -19,8 +19,7 @@ class Place(BaseModel):
         return {'id':self.id,
                 'created_at':self.created_at,
                 'updated_at':self.updated_at,
-                #checking the id of the user itself?
-                'owner_id': self.owner.id,
+                'owner_id': self.owner,
                 'city_id': self.city,
                 'name':self.name,
                 'description':self.description,
