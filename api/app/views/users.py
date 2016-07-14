@@ -27,7 +27,6 @@ def list_of_users():
 
         new_user =User(first_name=request.form['first_name'],
                         last_name=request.form['last_name'],
-                        #need to validate email
                         email=request.form['email'],
                         password=request.form['password'])
 
@@ -35,17 +34,15 @@ def list_of_users():
         return new_user.to_hash()
 
 
-#class user_list(View):
-    #Getting a list of all users
-#    if request.status == 'GET':
-#        def dispatch_request(self):
-#            users = user.query.all()
-#            return json_response(users)
-#    #creating new users
-#    elif request.method == 'POST':
-#        def new_user():
-#            first_name = request.form['inputName']
-#            last_name =request.form['inputLastName']
-#            #need to validate email
-#            email = request.form['inputEmail']
-#            password = request.form['inputPassword']
+@app.route('/users/<user_id>',methods=['GET', 'POST', 'DELETE'])
+def modify_users(user_id):
+    if request.method == 'GET':
+        id = user_id
+        return User.get(User.id == id).to_hash()
+
+    if request.method == 'POST':
+        return "hello"
+    if request.method == 'DELETE':
+        delete= "Delete From User where id = ?"
+        conn.cursor().execute(delete, (id,))
+        conn.commit()
