@@ -28,5 +28,5 @@ class Place(BaseModel):
                 'max_guest':self.max_guest,
                 'price_by_night':self.price_by_night,
                 'latitude':self.latitude,
-                'longitude'self.longitude
+                'longitude':self.longitude
                 }
