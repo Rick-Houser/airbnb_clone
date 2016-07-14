@@ -5,15 +5,20 @@ from app.models.user import User
 from app.models.base import db
 from flask import jsonify
 from flask import make_response
+import md5
+import json
+from playhouse.shortcuts import model_to_dict, dict_to_model
 
 @app.route('/users',methods=['GET', 'POST'])
 
 def list_of_users():
     if request.method == 'GET':
-        j = []
+        list = []
         for user in User.select():
-            j.append(user.first_name)
-        return jsonify(j)
+            list.append(model_to_dict(user, exclude=[User.create_at, User.updated_at,User.password,User.is_admin]))
+            j = json.dumps(list)
+            parsed = json.loads(j)
+        return json.dumps(parsed, indent=4, sort_keys=True)
 
     if request.method == 'POST':
         #stores the email comming from the post request
@@ -28,20 +33,46 @@ def list_of_users():
         new_user =User(first_name=request.form['first_name'],
                         last_name=request.form['last_name'],
                         email=request.form['email'],
-                        password=request.form['password'])
+                        password=md5.new(request.form['password']).hexdigest())
 
         new_user.save()
         return new_user.to_hash()
 
 
-@app.route('/users/<user_id>',methods=['GET', 'POST', 'DELETE'])
+@app.route('/users/<user_id>',methods=['GET', 'PUT', 'DELETE'])
 def modify_users(user_id):
     if request.method == 'GET':
         id = user_id
+        #returning a hash with the user information
         return User.get(User.id == id).to_hash()
 
-    if request.method == 'POST':
-        return "hello"
+    if request.method == 'PUT':
+        id = user_id
+
+        try:
+            #selecting the user by its id
+            #updating users first name
+            query = User.update(first_name = request.form['first_name']).where(User.id == id)
+        except:
+            pass
+
+        try:
+            #updating user last_name
+            query = User.update(last_name = request.form['last_name']).where(User.id == id)
+        except:
+            pass
+        try:
+            #updating and securing the password
+            query = User.update(password = md5.new(request.form['password']).hexdigest()).where(User.id == id)
+        except:
+            pass
+            #returning message when trying to update email
+        if request.form['email']:
+            return "Email can not be updated\n"
+        query.execute()
+        return "updated\n"
+
+
     if request.method == 'DELETE':
         id = user_id
         try:
