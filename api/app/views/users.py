@@ -43,6 +43,12 @@ def modify_users(user_id):
     if request.method == 'POST':
         return "hello"
     if request.method == 'DELETE':
-        delete= "Delete From User where id = ?"
-        conn.cursor().execute(delete, (id,))
-        conn.commit()
+        id = user_id
+        try:
+            #creating an object
+            get_user = User.get(User.id == id)
+            #deleting the instance of the object
+            get_user.delete_instance()
+            return "User with id = %d was deleted\n" %(int(id))
+        except:
+            return "No user was found with id %d\n" %(int(id))
