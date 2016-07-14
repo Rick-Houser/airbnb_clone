@@ -7,7 +7,7 @@ from flask import jsonify
 from flask import make_response
 import md5
 import json
-from playhouse.shortcuts import model_to_dict, dict_to_model
+from playhouse.shortcuts import model_to_dict
 
 @app.route('/users',methods=['GET', 'POST'])
 
@@ -15,7 +15,7 @@ def list_of_users():
     if request.method == 'GET':
         list = []
         for user in User.select():
-            list.append(model_to_dict(user, exclude=[User.create_at, User.updated_at,User.password,User.is_admin]))
+            list.append(model_to_dict(user, exclude=[User.password,User.is_admin]))
             j = json.dumps(list)
             parsed = json.loads(j)
         return json.dumps(parsed, indent=4, sort_keys=True)

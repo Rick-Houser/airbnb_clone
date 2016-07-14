@@ -1,0 +1,1 @@
+mysql --host=158.69.80.142 --user=airbnb_user_dev --password=*****  airbnb_dev
