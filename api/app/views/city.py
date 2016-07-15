@@ -13,7 +13,7 @@ import json
 
 def list_cities(state_id):
     id_state = state_id
-
+    #returns a json with the cities associated to a state
     if request.method == 'GET':
         list =[]
         for city in City.select().where(City.state == id_state):
@@ -21,7 +21,7 @@ def list_cities(state_id):
             j = json.dumps(list)
             parsed = json.loads(j)
         return jsonify(parsed)
-
+    #creates a new city
     if request.method == 'POST':
         city_name = request.form['name']
         new_city = City(name=request.form['name'], state_id=id_state)
