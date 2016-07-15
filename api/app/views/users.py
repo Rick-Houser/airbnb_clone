@@ -15,10 +15,12 @@ def list_of_users():
     if request.method == 'GET':
         list = []
         for user in User.select():
-            list.append(model_to_dict(user, exclude=[User.password,User.is_admin]))
+            #need to fix json not serilizable for now excluding it
+            list.append(model_to_dict(user, exclude=[User.updated_at, User.create_at,User.password,User.is_admin]))
             j = json.dumps(list)
             parsed = json.loads(j)
-        return json.dumps(parsed, indent=4, sort_keys=True)
+        return jsonify(parsed)
+        #json.dumps(parsed, indent=4, sort_keys=True)
 
     if request.method == 'POST':
         #stores the email comming from the post request

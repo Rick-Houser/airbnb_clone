@@ -13,8 +13,10 @@ def list_of_states():
         list = []
         for state in State.select():
             list.append(state.name)
-            j = json.dumps(list , indent=4, sort_keys=True)
-        return j
+            #j = json.dumps(list , indent=4, sort_keys=True)
+            j = json.dumps(list)
+            parsed = json.loads(j)
+        return jsonify(parsed)
 
     if request.method == 'POST':
         name_state = request.form['name']
