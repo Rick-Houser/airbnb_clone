@@ -27,3 +27,18 @@ def list_cities(state_id):
         new_city = City(name=request.form['name'], state_id=id_state)
         new_city.save()
         return "New city saved\n"
+
+@app.route('/states/<state_id>/cities/<city_id>', methods=['GET', 'DELETE'])
+
+def modify_city(state_id, city_id):
+    id = city_id
+    try:
+        if request.method == 'GET':
+            list =[]
+            for city in City.select().where(City.id == id):
+                list.append(city.name)
+                j = json.dumps(list)
+                parsed = json.loads(j)
+            return jsonify(parsed)
+    except:
+        return "City with id %d does not exist" %(int(id))
