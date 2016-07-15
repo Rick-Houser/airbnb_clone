@@ -1,1 +1,1 @@
-__all__=["index", "users", "state","city"]
+__all__=["index", "users", "state","city","place"]
