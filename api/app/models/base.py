@@ -16,7 +16,7 @@ class BaseModel(peewee.Model):
     create_at = peewee.DateTimeField(default=datetime.now().strftime('%Y/%m/%d %H:%M:%S'))
 
     def save (self, *args,  **kwargs):
-        self.updated_at = datetime.now().strftime('%Y/%m/%d %H:%M:%S')
+        self.updated_at = datetime.now().strftime('%d/%m/%Y %H:%M:%S')
         peewee.Model.save(self)
 
 
