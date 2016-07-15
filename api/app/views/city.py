@@ -23,6 +23,11 @@ def list_cities(state_id):
         return jsonify(parsed)
     #creates a new city
     if request.method == 'POST':
+        #checks if the city already exist in the state
+        for city in City.select():
+            if str(city.state_id) == id_state and city.name == request.form['name']:
+                return make_response(jsonify({'code':'10001', 'msg':'City already exists in this state'}),409)
+
         city_name = request.form['name']
         new_city = City(name=request.form['name'], state_id=id_state)
         new_city.save()
@@ -42,3 +47,11 @@ def modify_city(state_id, city_id):
             return jsonify(parsed)
     except:
         return "City with id %d does not exist" %(int(id))
+    if request.method == "DELETE":
+        id = city_id
+        try:
+            get_city = City.get(City.id == id)
+            get_city.delete_instance()
+            return "City with id %d was deleted\n" %(int(id))
+        except:
+            return "City with id %d does not exist\n" %(int(id))
