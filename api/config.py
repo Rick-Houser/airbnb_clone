@@ -25,7 +25,7 @@ elif name == 'test':
                 'database': 'airbnb_test',
                 'port': 3306,
                 'charset': 'utf8',
-                'password': os.environ('AIRBNB_DATABASE_PWD_TEST')
+                'password': os.environ.get('AIRBNB_DATABASE_PWD_TEST')
                 }
 
 else:
