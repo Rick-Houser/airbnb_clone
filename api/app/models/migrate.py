@@ -6,7 +6,7 @@ from place import Place
 from place_book import PlaceBook
 from amenity import Amenity
 from place_amenity import PlaceAmenities
-from peewee import *
+
 
 db.connect()
 db.create_tables([User,
@@ -17,5 +17,5 @@ db.create_tables([User,
                   Amenity,
                   PlaceAmenities], safe=True)
 
-test=User(email='foo', password='foo', first_name='foo',last_name='foo')
+test = User(email='foo', password='foo', first_name='foo', last_name='foo')
 test.save()

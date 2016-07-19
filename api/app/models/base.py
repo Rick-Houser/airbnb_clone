@@ -3,7 +3,8 @@ from datetime import datetime
 from config import *
 
 
-db = peewee.MySQLDatabase(DATABASE['database'], host=DATABASE['host'],
+db = peewee.MySQLDatabase(DATABASE['database'],
+                          host=DATABASE['host'],
                           port=DATABASE['port'],
                           user=DATABASE['user'],
                           charset=DATABASE['charset'],
