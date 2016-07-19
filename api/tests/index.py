@@ -4,7 +4,7 @@ import json
 from datetime import datetime
 
 
-class Test(unittest.TestCase):
+class Root_Test(unittest.TestCase):
     def setUp(self):
         self.app = app.test_client()
 
