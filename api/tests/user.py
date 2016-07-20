@@ -88,7 +88,7 @@ class userTest(unittest.TestCase):
         # print new_user.data
         # checking if the user created is the same as the user returned
         # will return True is the  users match else will return false
-        # assert sorted(response) == sorted(new_user.data)
+        assert sorted(response) == sorted(new_user.data)
 
         # checking when trying to get an id that is not linked to an user
         response = self.app.get('/users/3').data
