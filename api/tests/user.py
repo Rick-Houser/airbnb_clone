@@ -3,6 +3,7 @@ import unittest
 import logging
 from app.models.base import db
 from app.models.user import User
+import json
 
 
 class userTest(unittest.TestCase):
@@ -14,11 +15,11 @@ class userTest(unittest.TestCase):
         # creating a database
         db.create_tables([User], safe=True)
 
-    # def tearDown(self):
+    def tearDown(self):
         # deleting user
         # User.delete().execute()
         # deleting the table user
-        # db.drop_tables([User])
+        db.drop_tables([User], safe=True)
 
     def test_create(self):
         # testing the post request for user with all parameters
@@ -40,19 +41,20 @@ class userTest(unittest.TestCase):
                                           last_name=' ',
                                           email='jon+2@snow',
                                           password='toto1234'))
+        self.assertEqual(User.select(id), 3)
         # testing without and email
         self.app.post('/users', data=dict(first_name='Jon',
                                           last_name='b ',
                                           email=' ',
                                           password='toto1234'))
-        self.assertEqual(User.select(id), 3)
+        self.assertEqual(User.select(id), 4)
 
         # testing without a password
         self.app.post('/users', data=dict(first_name='Jon',
                                           last_name='b',
                                           email='s@gmail.com ',
                                           password=' '))
-        self.assertEqual(User.select(id), 4)
+        self.assertEqual(User.select(id), 5)
 
         # testing if an user can't have the same email
         email_test = self.app.post('/users', data=dict(first_name='Jon',
@@ -62,6 +64,12 @@ class userTest(unittest.TestCase):
 
         assert email_test.status_code == 409
 
-    # def test_list(self):
-    #    list_test = self.app.get('/users')
-    #    print list_test.id
+    def test_list(self):
+        list_test = self.app.get('/users')
+        # nth elements if users were created
+        try:
+            to_dict = json.loads(list_test.data)
+            print len(to_dict)
+        # return 0 elements if no user was created
+        except:
+            print 0

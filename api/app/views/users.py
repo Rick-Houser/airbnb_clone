@@ -9,13 +9,13 @@ import md5
 import json
 from playhouse.shortcuts import model_to_dict
 
-@app.route('/users',methods=['GET', 'POST'])
 
+@app.route('/users', methods=['GET', 'POST'])
 def list_of_users():
     if request.method == 'GET':
         list = []
         for user in User.select():
-            #need to fix json not serilizable for now excluding it
+            # need to fix json not serilizable for now excluding it
             list.append(model_to_dict(user, exclude=[User.updated_at, User.create_at,User.password,User.is_admin]))
             j = json.dumps(list)
             parsed = json.loads(j)
