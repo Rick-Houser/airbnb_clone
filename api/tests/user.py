@@ -170,3 +170,11 @@ class userTest(unittest.TestCase):
         # print list_test.data
         # checking the status code
         assert list_test.status_code == 200
+        self.app.put('/users/3', data=dict(first_name="John"))
+        response = self.app.get('/users/3').data
+        try:
+            # if the user exist will pass the test
+            json.loads(response)
+        # if the user does not exist assets false
+        except:
+            print "id is not linked to an user"
