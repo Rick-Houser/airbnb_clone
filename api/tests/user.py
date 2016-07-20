@@ -69,7 +69,7 @@ class userTest(unittest.TestCase):
         # nth elements if users were created
         try:
             to_dict = json.loads(list_test.data)
-            print len(to_dict)
+            return len(to_dict)
         # return 0 elements if no user was created
         except:
-            print 0
+            return 0
