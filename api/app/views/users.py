@@ -55,22 +55,26 @@ def modify_users(user_id):
             # selecting the user by its id
             # updating users first name
             query = User.update(first_name=request.form['first_name']).where(User.id == id)
+            # added the folling line since it did not seem to do it at the end
+            query.execute()
         except:
             pass
 
         try:
             # updating user last_name
             query = User.update(last_name=request.form['last_name']).where(User.id == id)
+            query.execute()
         except:
             pass
         try:
             # updating and securing the password
             query = User.update(password=md5.new(request.form['password']).hexdigest()).where(User.id == id)
+            query.execute()
         except:
             pass
             # returning message when trying to update email
         if request.form['email']:
-            return "Email can not be updated\n"
+            return make_response(jsonify({'code': 10000, 'msg': 'email can not be updateed'}), 409)
         query.execute()
         return "updated\n"
 

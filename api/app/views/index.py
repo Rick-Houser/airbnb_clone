@@ -24,5 +24,3 @@ def after_request():
 @app.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'code': '404', 'msg': 'not found'}), 404)
-    # json_response(code='404', msg='Not found')
-    # make_response(jsonify({'code':'404', 'msg':'not found'}),404)

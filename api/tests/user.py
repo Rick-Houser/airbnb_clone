@@ -73,3 +73,100 @@ class userTest(unittest.TestCase):
         # return 0 elements if no user was created
         except:
             return 0
+
+    def test_get(self):
+        # Creating an user
+        new_user = self.app.post('/users', data=dict(first_name='Jon',
+                                                     last_name='Snow',
+                                                     email='jon@snow',
+                                                     password='toto1234'))
+        # Checking the status code
+        assert new_user.status_code == 200
+        # Getting the user
+        response = self.app.get('/users/1').data
+        # print response
+        # print new_user.data
+        # checking if the user created is the same as the user returned
+        # will return True is the  users match else will return false
+        # assert sorted(response) == sorted(new_user.data)
+
+        # checking when trying to get an id that is not linked to an user
+        response = self.app.get('/users/3').data
+        try:
+            # if the user exist will pass the test
+            json.loads(response)
+        # if the user does not exist assets false
+        except:
+            return "id is not linked to an user"
+
+    def test_delete(self):
+        # Creating an user
+        new_user = self.app.post('/users', data=dict(first_name='Jon',
+                                                     last_name='Snow',
+                                                     email='jon@snow',
+                                                     password='toto1234'))
+        # checking the number of users after creation
+        list_test = self.app.get('/users')
+        # nth elements if users were created
+        to_dict = json.loads(list_test.data)
+        assert len(to_dict) == 1
+        # deleting the user
+        self.app.delete('/users/1')
+
+        # checking the number of users after delition
+        list_test = self.app.get('/users')
+        # nth elements if users were created
+        try:
+            to_dict = json.loads(list_test.data)
+        except:
+            assert True
+        # checking the status code
+        assert new_user.status_code == 200
+        # deleting an user
+        self.app.delete('/users/3').data
+        # getting an user
+        response = self.app.get('/users/3').data
+        try:
+            # if the user exist will pass the test
+            json.loads(response)
+        # if the user does not exist assets false
+        except:
+            return "id is not linked to an user"
+
+    def test_update(self):
+        # Creating an user
+        new_user = self.app.post('/users', data=dict(first_name='Jon',
+                                                     last_name='Snow',
+                                                     email='jon@snow',
+                                                     password='toto1234'))
+        # checking the status code
+        assert new_user.status_code == 200
+
+        # print new_user.data
+        # updating the user first_name
+        self.app.put('/users/1', data=dict(first_name='steven'))
+        list_test = self.app.get('/users/1')
+        # print list_test.data
+        # checking the status code
+        assert list_test.status_code == 200
+
+        # updating users last name
+        self.app.put('/users/1', data=dict(last_name='garcia'))
+        list_test = self.app.get('/users/1')
+        print list_test.data
+        # checking the status code
+        assert list_test.status_code == 200
+
+        # updating the email
+        self.app.put('/users/1', data=dict(email='steven@gmail.com'))
+        list_test = self.app.get('/users/1')
+        # print list_test.data
+        # checking the status code
+        assert list_test.status_code == 200
+
+        # updating the password
+        self.app.put('/users/1', data=dict(password='123345'))
+        list_test = self.app.get('/users/1')
+        # print list_test.data
+        # checking the status code
+        assert list_test.status_code == 200
