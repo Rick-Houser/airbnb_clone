@@ -1,14 +1,13 @@
-from peewee import *
 from base import *
-from flask import Flask
-from flask_json import jsonify
+
 
 class State(BaseModel):
-    name = CharField(128, null = False, unique = True)
+    name = peewee.CharField(128, null=False, unique=True)
 
     def to_hash(self):
-        return jsonify({'id': self.id,
-                        'create_at': self.create_at,
-                        'updated_at': self.updated_at,
-                        'name': self.name
-                        })
+        hash = {}
+        hash["id"] = self.id
+        hash["created_at"] = self.created_at.strftime('%d/%m/%Y %H:%M:%S')
+        hash["updated_at"] = self.updated_at.strftime('%d/%m/%Y %H:%M:%S')
+        hash["name"] = self.name
+        return hash
