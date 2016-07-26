@@ -21,12 +21,13 @@ def list_cities(state_id):
             j = json.dumps(list)
             parsed = json.loads(j)
         return jsonify(parsed)
-    #creates a new city
+    # creates a new city
     if request.method == 'POST':
-        #checks if the city already exist in the state
+        # checks if the city already exist in the state
         for city in City.select():
             if str(city.state_id) == id_state and city.name == request.form['name']:
-                return make_response(jsonify({'code':'10001', 'msg':'City already exists in this state'}),409)
+                return make_response(jsonify({'code': '10001',
+                                              'msg': 'City already exists in this state'}), 409)
 
         city_name = request.form['name']
         new_city = City(name=request.form['name'], state_id=id_state)

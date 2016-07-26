@@ -13,11 +13,13 @@ db = peewee.MySQLDatabase(DATABASE['database'],
 
 class BaseModel(peewee.Model):
     id = peewee.PrimaryKeyField(unique=True)
-    updated_at = peewee.DateTimeField(default=datetime.now().strftime('%Y/%m/%d %H:%M:%S'))
-    create_at = peewee.DateTimeField(default=datetime.now().strftime('%Y/%m/%d %H:%M:%S'))
+    updated_at = peewee.DateTimeField(default=datetime.now,
+                                      formats='%d/%m/%Y %H:%M:%S')
+    created_at = peewee.DateTimeField(default=datetime.now,
+                                      formats='%d/%m/%Y %H:%M:%S')
 
     def save(self, *args,  **kwargs):
-        self.updated_at = datetime.now().strftime('%d/%m/%Y %H:%M:%S')
+        self.updated_at = datetime.now()
         peewee.Model.save(self)
 
     class Meta():
