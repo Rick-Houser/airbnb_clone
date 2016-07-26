@@ -17,7 +17,7 @@ class User(BaseModel):
 
     def to_hash(self):
         return jsonify({'id': self.id,
-                        'create_at': self.create_at,
+                        'created_at': self.create_at,
                         'updated_at': self.updated_at,
                         'email': self.email,
                         'first_name': self.first_name,
