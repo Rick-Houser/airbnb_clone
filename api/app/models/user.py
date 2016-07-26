@@ -2,6 +2,7 @@ from base import *
 from peewee import *
 import md5
 from flask import jsonify
+from datetime import datetime
 
 
 class User(BaseModel):
@@ -16,11 +17,11 @@ class User(BaseModel):
         self.password = md5.new(clear_password).hexdigest()
 
     def to_hash(self):
-        return jsonify({'id': self.id,
-                        'created_at': self.created_at,
-                        'updated_at': self.updated_at,
-                        'email': self.email,
-                        'first_name': self.first_name,
-                        'last_name': self.last_name,
-                        'is_admin': self.is_admin
-                        })
+        return {'id': self.id,
+                'created_at': self.created_at.strftime('%d/%m/%Y %H:%M:%S'),
+                'updated_at': self.created_at.strftime('%d/%m/%Y %H:%M:%S'),
+                'email': self.email,
+                'first_name': self.first_name,
+                'last_name': self.last_name,
+                'is_admin': self.is_admin
+                }

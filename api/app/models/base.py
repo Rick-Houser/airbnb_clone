@@ -1,6 +1,7 @@
 import peewee
 from datetime import datetime
 from config import *
+from datetime import datetime
 
 
 db = peewee.MySQLDatabase(DATABASE['database'],
@@ -13,11 +14,9 @@ db = peewee.MySQLDatabase(DATABASE['database'],
 
 class BaseModel(peewee.Model):
     id = peewee.PrimaryKeyField(unique=True)
-    updated_at = peewee.DateTimeField(default=datetime.now(),
-                                      formats='%d/%m/%Y %H:%M:%S')
+    updated_at = peewee.DateTimeField(default=datetime.now())
 
-    created_at = peewee.DateTimeField(default=datetime.now(),
-                                      formats='%d/%m/%Y %H:%M:%S')
+    created_at = peewee.DateTimeField(default=datetime.now())
 
     def save(self, *args,  **kwargs):
         self.updated_at = datetime.now()

@@ -16,11 +16,8 @@ def list_of_users():
         list = []
         for user in User.select():
             # need to fix json not serilizable for now excluding it
-            list.append(model_to_dict(user, exclude=[User.updated_at, User.create_at,User.password,User.is_admin]))
-            j = json.dumps(list)
-            parsed = json.loads(j)
-        return jsonify(parsed)
-        # json.dumps(parsed, indent=4, sort_keys=True)
+            list.append(user.to_hash())
+        return jsonify(list)
 
     if request.method == 'POST':
         # stores the email comming from the post request
