@@ -13,9 +13,10 @@ db = peewee.MySQLDatabase(DATABASE['database'],
 
 class BaseModel(peewee.Model):
     id = peewee.PrimaryKeyField(unique=True)
-    updated_at = peewee.DateTimeField(default=datetime.now,
+    updated_at = peewee.DateTimeField(default=datetime.now(),
                                       formats='%d/%m/%Y %H:%M:%S')
-    created_at = peewee.DateTimeField(default=datetime.now,
+
+    created_at = peewee.DateTimeField(default=datetime.now(),
                                       formats='%d/%m/%Y %H:%M:%S')
 
     def save(self, *args,  **kwargs):
