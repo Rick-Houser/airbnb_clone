@@ -40,7 +40,7 @@ class state_test(unittest.TestCase):
         assert new_state.status_code == 200
 
         # getting a list of all states
-        get_state = self.app.get('/states')
+        # get_state = self.app.get('/states')
         # print get_state.data
 
     def test_get(self):
@@ -49,7 +49,7 @@ class state_test(unittest.TestCase):
         assert new_state.status_code == 200
 
         get_state = self.app.get('/states/1')
-        print get_state.data
+        # print get_state.data
 
         # checking if the user created is the same gotten by the request
         assert json.loads(get_state.data)['name'] == 'California'
