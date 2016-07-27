@@ -17,9 +17,9 @@ if name == 'production':
                 }
 
 elif name == 'test':
-    DEBUG = False,
-    HOST = 'localhost',
-    PORT = 5555,
+    DEBUG = True
+    HOST = 'localhost'
+    PORT = 5555
     DATABASE = {'host': '158.69.80.142',
                 'user': 'airbnb_user_test',
                 'database': 'airbnb_test',
