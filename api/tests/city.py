@@ -55,3 +55,15 @@ class city_test(unittest.TestCase):
         get_city = self.app.get('/states/1/cities')
         # print get_city.data
         assert get_city.status_code == 200
+
+    def test_delete(self):
+        # creating a state
+        new_state = self.app.post('/states', data=dict(name='California'))
+        assert new_state.status_code == 200
+        # print new_state.status_code
+        # creating a city
+        new_city = self.app.post('/states/1/cities', data=dict(name='San Francisco'))
+        assert new_city.status_code == 200
+        # deleting the city
+        city_delete = self.app.delete('/states/1/cities/1')
+        assert city_delete.status_code == 200
