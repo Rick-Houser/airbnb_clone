@@ -1,8 +1,6 @@
 from flask import make_response
 from flask import request
 from app import app
-import json
-from playhouse.shortcuts import model_to_dict
 from app.models.base import db
 from app.models.state import State
 from flask_json import jsonify
@@ -13,10 +11,8 @@ def list_of_states():
     if request.method == 'GET':
         list = []
         for state in State.select():
-            list.append(state.name)
-            j = json.dumps(list)
-            parsed = json.loads(j)
-        return jsonify(parsed)
+            list.append(state.to_hash())
+        return jsonify(list)
 
     if request.method == 'POST':
         # name_state = request.form['name']
@@ -28,7 +24,6 @@ def list_of_states():
             return "New State entered! -> %s\n" % (new_state.name)
         except:
             return make_response(jsonify({'code': 10000, 'msg': 'State already exist'}), 409)
-            # return "%s already exist\n" % (name_state)
 
 
 @app.route('/states/<state_id>', methods=['GET', 'DELETE'])
@@ -37,7 +32,7 @@ def modify_state(state_id):
         # displaying state by id
         if request.method == 'GET':
             id = state_id
-            return State.get(State.id == id).to_hash()
+            return jsonify(State.get(State.id == id).to_hash())
     except:
         return "No State was found with id %d\n" % (int(id))
     if request.method == 'DELETE':
