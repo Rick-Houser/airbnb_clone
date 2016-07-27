@@ -3,7 +3,9 @@ import unittest
 import logging
 from app.models.base import db
 from app.models.user import User
+from app.views.users import *
 import json
+# from app.views.user import User
 
 
 class userTest(unittest.TestCase):
@@ -78,26 +80,19 @@ class userTest(unittest.TestCase):
         # Creating an user
         new_user = self.app.post('/users', data=dict(first_name='Jon',
                                                      last_name='Snow',
-                                                     email='jon@snow',
+                                                     email='j@snow',
                                                      password='toto1234'))
         # Checking the status code
         assert new_user.status_code == 200
         # Getting the user
         response = self.app.get('/users/1').data
-        # print response
-        # print new_user.data
         # checking if the user created is the same as the user returned
         # will return True is the  users match else will return false
         assert sorted(response) == sorted(new_user.data)
 
         # checking when trying to get an id that is not linked to an user
-        response = self.app.get('/users/3').data
-        try:
-            # if the user exist will pass the test
-            json.loads(response)
-        # if the user does not exist assets false
-        except:
-            return "id is not linked to an user"
+        response = self.app.get('/users/3')
+        assert response.status_code == 404
 
     def test_delete(self):
         # Creating an user
@@ -125,13 +120,8 @@ class userTest(unittest.TestCase):
         # deleting an user
         self.app.delete('/users/3').data
         # getting an user
-        response = self.app.get('/users/3').data
-        try:
-            # if the user exist will pass the test
-            json.loads(response)
-        # if the user does not exist assets false
-        except:
-            return "id is not linked to an user"
+        response = self.app.get('/users/3')
+        assert response.status_code == 404
 
     def test_update(self):
         # Creating an user
@@ -142,39 +132,31 @@ class userTest(unittest.TestCase):
         # checking the status code
         assert new_user.status_code == 200
 
-        # print new_user.data
         # updating the user first_name
         self.app.put('/users/1', data=dict(first_name='steven'))
         list_test = self.app.get('/users/1')
-        # print list_test.data
         # checking the status code
         assert list_test.status_code == 200
 
         # updating users last name
         self.app.put('/users/1', data=dict(last_name='garcia'))
         list_test = self.app.get('/users/1')
-        print list_test.data
         # checking the status code
         assert list_test.status_code == 200
 
         # updating the email
         self.app.put('/users/1', data=dict(email='steven@gmail.com'))
         list_test = self.app.get('/users/1')
-        # print list_test.data
         # checking the status code
         assert list_test.status_code == 200
 
         # updating the password
         self.app.put('/users/1', data=dict(password='123345'))
         list_test = self.app.get('/users/1')
-        # print list_test.data
         # checking the status code
         assert list_test.status_code == 200
         self.app.put('/users/3', data=dict(first_name="John"))
-        response = self.app.get('/users/3').data
-        try:
-            # if the user exist will pass the test
-            json.loads(response)
-        # if the user does not exist assets false
-        except:
-            print "id is not linked to an user"
+        # Testing for a user that does not exist
+        response = self.app.get('/users/3')
+        # if the user does not exist code is 404
+        assert response.status_code == 404
