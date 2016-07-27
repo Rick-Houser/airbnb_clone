@@ -1,6 +1,7 @@
 from peewee import *
 from base import *
 from state import *
+from datetime import datetime
 
 
 class City(BaseModel):
@@ -8,9 +9,16 @@ class City(BaseModel):
     state = ForeignKeyField(State, related_name='cities', on_delete="CASCADE")
 
     def to_hash(self):
-        return {'id': self.id,
-                'create_at': self.create_at,
-                'updated_at': self.updated_at,
-                'name': self.name,
-                'state_id': self.state
-                }
+        hash = {}
+        hash["id"] = self.id
+        hash["created_at"] = self.created_at.strftime('%d/%m/%Y %H:%M:%S')
+        hash["updated_at"] = self.updated_at.strftime('%d/%m/%Y %H:%M:%S')
+        hash["name"] = self.name
+        hash["state_id"] = self.state.id
+        return hash
+        # return {'id': self.id,
+        #         'created_at': self.created_at.strftime('%d/%m/%Y %H:%M:%S'),
+        #         'updated_at': self.updated_at.strftime('%d/%m/%Y %H:%M:%S'),
+        #         'name': self.name,
+        #         'state_id': self.state
+        #         }
