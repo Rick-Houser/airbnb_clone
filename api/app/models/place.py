@@ -2,7 +2,6 @@ from peewee import *
 from base import *
 from user import *
 from city import *
-from flask import jsonify
 
 class Place(BaseModel):
     owner = ForeignKeyField(User, related_name="places")
@@ -17,17 +16,17 @@ class Place(BaseModel):
     longitude = FloatField()
 
     def to_hash(self):
-        return jsonify({'id': self.id,
-                        'created_at': self.created_at,
-                        'updated_at': self.updated_at,
-                        'owner_id': self.owner,
-                        'city_id': self.city,
-                        'name': self.name,
-                        'description': self.description,
-                        'number_rooms': self.number_rooms,
-                        'number_bathrooms': self.number_bathrooms,
-                        'max_guest': self.max_guest,
-                        'price_by_night': self.price_by_night,
-                        'latitude': self.latitude,
-                        'longitude': self.longitude
-                        })
+        return {'id': self.id,
+                'created_at': self.created_at.strftime('%d/%m/%Y %H:%M:%S'),
+                'updated_at': self.updated_at.strftime('%d/%m/%Y %H:%M:%S'),
+                'owner_id': self.owner.id,
+                'city_id': self.city.id,
+                'name': self.name,
+                'description': self.description,
+                'number_rooms': self.number_rooms,
+                'number_bathrooms': self.number_bathrooms,
+                'max_guest': self.max_guest,
+                'price_by_night': self.price_by_night,
+                'latitude': self.latitude,
+                'longitude': self.longitude
+                }
