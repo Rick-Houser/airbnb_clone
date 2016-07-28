@@ -72,16 +72,20 @@ def modify_place(place_id):
 def places_within_city(state_id, city_id):
     response = jsonify({'code': 404, 'msg': 'not found'})
     response.status_code = 404
+
     # Getting the information for the place
     if request.method == 'GET':
-        try:
-            locations = Place.get(Place.city == city_id, City.state == state_id)
-            list = []
-            for location in locations:
-                list.append(location.to_hash())
-            return jsonify(list)
-        except:
-            return response
+        # try:
+        locations = (Place.select()
+                     .join(City)
+                     .where(City.id == city_id)
+                     .where(Place.city == city_id, City.state == state_id))
+        list = []
+        for location in locations:
+            list.append(location.to_hash())
+        return jsonify(list)
+        # except:
+        #    return response
     # Creating a new place
     elif request.method == 'POST':
         try:

@@ -133,3 +133,45 @@ class place_test(unittest.TestCase):
         # deleting place that does not exist
         get_place = self.app.delete('/places/3')
         assert get_place.status_code == 404
+
+    def test_update(self):
+        # creating a new state depency of city
+        new_state = self.app.post('/states', data=dict(name='California'))
+        assert new_state.status_code == 200
+        # creating a new city
+        new_city = self.app.post('/states/1/cities', data=dict(name='San Francisco'))
+        assert new_city.status_code == 200
+        # creating a new user dependency for place
+        new_user = self.app.post('/users', data=dict(first_name='Jon',
+                                                     last_name='Snow',
+                                                     email='jon@snow',
+                                                     password='toto1234'))
+        assert new_user.status_code == 200
+        new_place = self.app.post('/places', data=dict(
+                                             owner=1,
+                                             city=1,
+                                             name="Steven apartment",
+                                             description="apartment",
+                                             number_rooms=1,
+                                             number_bathrooms=1,
+                                             max_guest=2,
+                                             price_by_night=100,
+                                             latitude=37.774929,
+                                             longitude=-122.419416))
+        assert new_place.status_code == 200
+        get_place = self.app.get('/states/1/cities/1/places')
+        assert get_place.status_code == 200
+        new_place = self.app.post('/places', data=dict(
+                                             owner=1,
+                                             city=1,
+                                             name="Steven",
+                                             description="House",
+                                             number_rooms=1,
+                                             number_bathrooms=1,
+                                             max_guest=2,
+                                             price_by_night=100,
+                                             latitude=37.774929,
+                                             longitude=-122.419416))
+        assert new_place.status_code == 200
+        get_place = self.app.get('/states/1/cities/1/places')
+        assert get_place.status_code == 200
