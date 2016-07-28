@@ -37,21 +37,12 @@ def list_of_place():
 def modify_place(place_id):
     id = place_id
     if request.method == 'GET':
-        return Place.get(Place.id == id).to_hash()
-
-    if request.method == 'PUT':
-        id = place_id
         try:
-            # updating name
-            query = Place.update(name=request.form['name']).where(Place.id == id)
-        except:
-            pass
-
-        try:
-            return jsonify(Place.get(Place.id == id).to_hash())
+            get_place = Place.get(Place.id == id).to_hash()
+            return jsonify(get_place)
         except:
             return make_response(jsonify({'code': '10001',
-                                          'msg': 'no place found'}), 404)
+                                          'msg': 'Place not found'}), 404)
     elif request.method == 'PUT':
         place = Place.select().where(Place.id == place_id).get()
         params = request.values
@@ -71,7 +62,8 @@ def modify_place(place_id):
             get_place.delete_instance()
             return "Place with id = %d was deleted\n" % (int(id))
         except:
-            return make_response(jsonify({'code': '10001', 'msg': 'no place found with that id'}), 409)
+            return make_response(jsonify({'code': '10001',
+                                          'msg': 'Place not found'}), 404)
 
 
 # Function returns a list of places within specific city or adds new place
