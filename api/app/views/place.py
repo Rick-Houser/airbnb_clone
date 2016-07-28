@@ -76,6 +76,8 @@ def modify_place(place_id):
 @app.route('/states/<int:state_id>/cities/<int:city_id>/places', methods=['GET', 'POST'])
 # Function returns a list of places within specific city or adds new place
 def places_within_city(state_id, city_id):
+    response = jsonify({'code': 404,'msg': 'not found'})
+    response.status_code = 404
     if request.method == 'GET':
         try:
             locations = Place.get(Place.city == city_id, City.state == state_id)
@@ -84,7 +86,7 @@ def places_within_city(state_id, city_id):
                 list.append(i.to_hash())
             return jsonify(list)
         except:
-            print("Unknown location. Try again...")
+            return response
 
     elif request.method == 'POST':
         try:
@@ -103,4 +105,4 @@ def places_within_city(state_id, city_id):
             return jsonify(add_place.to_hash())
             print("You've just added a place!")
         except:
-            print("Something went wrong. Try again...")
+            return response
