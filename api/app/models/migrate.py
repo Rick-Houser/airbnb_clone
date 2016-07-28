@@ -15,5 +15,5 @@ db.create_tables([User,
                   PlaceBook,
                   Amenity,
                   PlaceAmenities], safe=True)
-test = User(email='foo', password='foo', first_name='foo', last_name='foo')
-test.save()
+# test = User(email='foo', password='foo', first_name='foo', last_name='foo')
+# test.save()

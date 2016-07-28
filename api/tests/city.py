@@ -9,7 +9,7 @@ import logging
 class city_test(unittest.TestCase):
     def setUp(self):
         # disabling logs
-        # logging.disable(logging.CRITICAL)
+        logging.disable(logging.CRITICAL)
         self.app = app.test_client()
         # connecting to the database
         db.connect()
