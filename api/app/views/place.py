@@ -75,23 +75,25 @@ def places_within_city(state_id, city_id):
 
     # Getting the information for the place
     if request.method == 'GET':
-        # try:
-        locations = (Place.select()
-                     .join(City)
-                     .where(City.id == city_id)
-                     .where(Place.city == city_id, City.state == state_id))
-        list = []
-        for location in locations:
-            list.append(location.to_hash())
-        return jsonify(list)
-        # except:
-        #    return response
+        try:
+            locations = (Place.select()
+                         .join(City)
+                         .where(City.id == city_id)
+                         .where(Place.city == city_id, City.state == state_id))
+            list = []
+            for location in locations:
+                list.append(location.to_hash())
+                return jsonify(list)
+        except:
+            return response
     # Creating a new place
     elif request.method == 'POST':
         try:
+            # Getting the city to check if it exist
             City.get(City.id == city_id, City.state == state_id)
+            # adding city by Using Post
             add_place = Place.create(owner=request.form['owner'],
-                                     city=request.form['city'],
+                                     city=city_id,
                                      name=request.form['name'],
                                      description=request.form['description'],
                                      number_rooms=request.form['number_rooms'],

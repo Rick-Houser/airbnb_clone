@@ -166,12 +166,25 @@ class place_test(unittest.TestCase):
                                              city=1,
                                              name="Steven",
                                              description="House",
-                                             number_rooms=1,
-                                             number_bathrooms=1,
-                                             max_guest=2,
+                                             number_rooms=5,
+                                             number_bathrooms=3,
+                                             max_guest=8,
                                              price_by_night=100,
                                              latitude=37.774929,
                                              longitude=-122.419416))
         assert new_place.status_code == 200
         get_place = self.app.get('/states/1/cities/1/places')
         assert get_place.status_code == 200
+
+        create_place = self.app.post('/states/1/cities/1/places',
+                                     data=dict(owner=1,
+                                               name="Brittney",
+                                               description="Clastle",
+                                               number_rooms=50,
+                                               number_bathrooms=10,
+                                               max_guest=200,
+                                               price_by_night=1000,
+                                               latitude=37.774929,
+                                               longitude=-122.419416))
+        assert create_place.status_code == 200
+        print create_place.data
