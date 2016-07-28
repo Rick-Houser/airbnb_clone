@@ -8,11 +8,12 @@ from app.models.state import State
 from app.models.user import User
 from flask import jsonify
 
+
 class place_test(unittest.TestCase):
 
     def setUp(self):
         self.app = app.test_client()
-        # logging.disable(logging.CRITICAL)
+        logging.disable(logging.CRITICAL)
         # connectting to database
         db.connect()
         db.create_tables([User], safe=True)

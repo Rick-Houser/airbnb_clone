@@ -73,34 +73,37 @@ def modify_place(place_id):
         except:
             return make_response(jsonify({'code': '10001', 'msg': 'no place found with that id'}), 409)
 
-@app.route('/states/<int:state_id>/cities/<int:city_id>/places', methods=['GET', 'POST'])
+
 # Function returns a list of places within specific city or adds new place
+@app.route('/states/<int:state_id>/cities/<int:city_id>/places',
+           methods=['GET', 'POST'])
 def places_within_city(state_id, city_id):
-    response = jsonify({'code': 404,'msg': 'not found'})
+    response = jsonify({'code': 404, 'msg': 'not found'})
     response.status_code = 404
+    # Getting the information for the place
     if request.method == 'GET':
         try:
             locations = Place.get(Place.city == city_id, City.state == state_id)
             list = []
-            for i in locations:
-                list.append(i.to_hash())
+            for location in locations:
+                list.append(location.to_hash())
             return jsonify(list)
         except:
             return response
-
+    # Creating a new place
     elif request.method == 'POST':
         try:
             City.get(City.id == city_id, City.state == state_id)
             add_place = Place.create(owner=request.form['owner'],
-                                    city=request.form['city'],
-                                    name=request.form['name'],
-                                    description=request.form['description'],
-                                    number_rooms=request.form['number_rooms'],
-                                    number_bathrooms=request.form['number_bathrooms'],
-                                    max_guest=request.form['max_guest'],
-                                    price_by_night=request.form['price_by_night'],
-                                    latitude=request.form['latitude'],
-                                    longitude=request.form['longitude'])
+                                     city=request.form['city'],
+                                     name=request.form['name'],
+                                     description=request.form['description'],
+                                     number_rooms=request.form['number_rooms'],
+                                     number_bathrooms=request.form['number_bathrooms'],
+                                     max_guest=request.form['max_guest'],
+                                     price_by_night=request.form['price_by_night'],
+                                     latitude=request.form['latitude'],
+                                     longitude=request.form['longitude'])
             add_place.save()
             return jsonify(add_place.to_hash())
             print("You've just added a place!")
