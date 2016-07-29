@@ -28,20 +28,18 @@ class Review(BaseModel):
         #     data['from_user_id'] = None
 
         try:
-            user_query = (ReviewUser.select()
-                                    .join(User)
-                                    .where(User.id == user)
+            user_query = (ReviewUser.select()  # .join(User)
+                                    .where(ReviewUser.review == self.id)
                                     .get())
-            data['to_user_id'] = user_query.user.id
+            data['to_user_id'] = user_query.user  # .id
         except ReviewUser.DoesNotExist:
             data['to_user_id'] = None
 
         try:
-            place_query = (ReviewPlace.select()
-                                      .join(Place)
-                                      .where(Place.id == place)
+            place_query = (ReviewPlace.select()  # .join(Place)
+                                      .where(ReviewPlace.review == self.id)
                                       .get())
-            data['to_place_id'] = place_query.place.id
+            data['to_place_id'] = place_query.place  # .id
         except ReviewPlace.DoesNotExist:
             data['to_place_id'] = None
         return data
