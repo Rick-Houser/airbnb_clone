@@ -3,7 +3,7 @@ import unittest
 import logging
 from app.models.base import db
 from app.models.user import User
-from app.views.users import *
+# from app.views.users import *
 import json
 # from app.views.user import User
 
