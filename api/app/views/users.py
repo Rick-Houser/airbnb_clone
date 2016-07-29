@@ -14,7 +14,7 @@ def users():
             list = []
             for user in User.select():
                 list.append(user.to_hash())
-                return jsonify(list)
+            return jsonify(list)
         except:
             return make_response(jsonify({'code': 10000,
                                           'msg': 'users not found'}), 404)

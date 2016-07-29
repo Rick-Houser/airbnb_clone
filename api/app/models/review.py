@@ -6,7 +6,7 @@ from review_place import ReviewPlace
 
 class Review(BaseModel):
     message = TextField(null=False)
-    starts = IntegerField(default=0)
+    stars = IntegerField(default=0)
     user = ForeignKeyField(User, related_name="reviews", on_delete=cascade)
 
     def to_hash(self):
@@ -14,18 +14,18 @@ class Review(BaseModel):
                 'created_at': self.created_at,
                 'updated_at': self.updated_at,
                 'message': self.message,
-                'stars': self.starts,
-                'from_user_id': self.id,
+                'stars': self.stars,
+                'from_user_id': self.user,
                 'to_user_id': self.id,
                 'to_place_id': self.id}
-        try:
-            query = (ReviewUser.select()
-                               .join(Review)
-                               .where(Review.id == review)
-                               .get())
-            data['from_user_id'] = query.user.id
-        except ReviewUser.DoesNotExist:
-            data['from_user_id'] = None
+        # try:
+        #     query = (ReviewUser.select()
+        #                        .join(Review)
+        #                        .where(Review.id == review)
+        #                        .get())
+        #     data['from_user_id'] = query.user.id
+        # except ReviewUser.DoesNotExist:
+        #     data['from_user_id'] = None
 
         try:
             user_query = (ReviewUser.select()
