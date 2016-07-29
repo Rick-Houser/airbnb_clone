@@ -6,6 +6,9 @@ from place import Place
 from place_book import PlaceBook
 from amenity import Amenity
 from place_amenity import PlaceAmenities
+from review import Review
+from review_place import ReviewPlace
+from review_user import ReviewUser
 
 db.connect()
 db.create_tables([User,
@@ -14,6 +17,9 @@ db.create_tables([User,
                   Place,
                   PlaceBook,
                   Amenity,
-                  PlaceAmenities], safe=True)
+                  PlaceAmenities,
+                  Review,
+                  ReviewPlace,
+                  ReviewUser], safe=True)
 # test = User(email='foo', password='foo', first_name='foo', last_name='foo')
 # test.save()
