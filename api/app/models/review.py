@@ -1,5 +1,6 @@
 from peewee import *
 from user import User
+from place import Place
 from review_user import ReviewUser
 from review_place import ReviewPlace
 
@@ -28,7 +29,8 @@ class Review(BaseModel):
         #     data['from_user_id'] = None
 
         try:
-            user_query = (ReviewUser.select()  # .join(User)
+            user_query = (ReviewUser.select()
+                                    .join(User)
                                     .where(ReviewUser.review == self.id)
                                     .get())
             data['to_user_id'] = user_query.user  # .id
@@ -36,7 +38,8 @@ class Review(BaseModel):
             data['to_user_id'] = None
 
         try:
-            place_query = (ReviewPlace.select()  # .join(Place)
+            place_query = (ReviewPlace.select()
+                                      .join(Place)
                                       .where(ReviewPlace.review == self.id)
                                       .get())
             data['to_place_id'] = place_query.place  # .id
