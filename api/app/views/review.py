@@ -2,6 +2,7 @@ from app.models.review import Review
 from app.models.review_place import ReviewPlace
 from app.models.review_user import ReviewUser
 from app.models.user import User
+from app.models.place import Place
 from app import app
 from flask import jsonify, request
 from flask import make_response
@@ -58,21 +59,27 @@ def delete_reviews_user(user_id, review_id):
         return jsonify(get_review.review.to_hash())
 
     elif request.method == 'DELETE':
+        try:
+            user_review = ReviewUser.get((ReviewUser.user == user_id) &
+                                         (ReviewUser.review == review_id))
+            user_review.delete_instance()
 
-        user_review = ReviewUser.get((ReviewUser.user == user_id) &
-                                     (ReviewUser.review == review_id))
-        user_review.delete_instance()
-
-        get_review = Review.get(Review.id == review_id)
-        get_review.delete_instance()
-        return "Review was deleted"
-        # except:
-        #     return make_response(jsonify({'code': 10000,
-        #                                   'msg': 'Review not found'}), 404)
+            get_review = Review.get(Review.id == review_id)
+            get_review.delete_instance()
+            return "Review was deleted"
+        except:
+            return make_response(jsonify({'code': 10000,
+                                          'msg': 'Review not found'}), 404)
 
 
 @app.route('/places/<place_id>/reviews', methods=['GET', 'POST'])
 def get_review_place(place_id):
+    try:
+        # Checking if place exist
+        Place.select().where(Place.id == place_id).get()
+    except Place.DoesNotExist:
+        return make_response(jsonify({'code': 10000,
+                                      'msg': 'Place not found'}), 404)
     if request.method == 'GET':
         try:
             list = []
@@ -87,15 +94,15 @@ def get_review_place(place_id):
     elif request.method == 'POST':
         user_message = request.form["message"]
         user_stars = request.form["stars"]
-        user_id = request.form["id"]  # Not sure about this one
         try:
-            Review(message=user_message,
-                   stars=user_stars,
-                   user=user_id)
-            Review.save()
+            new_review = Review(message=user_message,
+                                stars=user_stars,
+                                user=place_id)  # using the place_id as user?
+            new_review.save()
 
-            ReviewUser(user=Review.id, place=place_id)
-
+            review_place = ReviewPlace(review=new_review.id, place=place_id)
+            review_place.save()
+            return jsonify(new_review.to_hash())
         except:
             return make_response(jsonify({'code': 10000,
                                           'msg': 'Review not found'}), 404)

@@ -160,14 +160,13 @@ class review_test(unittest.TestCase):
         new_place.save()
         new_review = self.app.post('/places/1/reviews',
                                    data=dict(message="I like it",
-                                             user_id=1,
                                              stars=5))
         assert new_review.status_code == 200
 
         # Getting a review for a place that does not exist
         get_review_place = self.app.get('/places/3/reviews')
-        assert get_review_place == 404
-
+        assert get_review_place.status_code == 404
+        
         # Getting a review for a place that does exist
         get_review_place = self.app.get('/places/1/reviews')
         assert get_review_place == 200
