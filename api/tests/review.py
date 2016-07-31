@@ -39,15 +39,15 @@ class review_test(unittest.TestCase):
                      password='toto1234')
         user2.save()
 
-    def tearDown(self):
-        # deleting tables
-        db.drop_tables([ReviewPlace])
-        db.drop_tables([ReviewUser])
-        db.drop_tables([Review])
-        db.drop_tables([Place])
-        db.drop_tables([City])
-        db.drop_tables([User])
-        db.drop_tables([State])
+    # def tearDown(self):
+    #     # deleting tables
+    #     db.drop_tables([ReviewPlace])
+    #     db.drop_tables([ReviewUser])
+    #     db.drop_tables([Review])
+    #     db.drop_tables([Place])
+    #     db.drop_tables([City])
+    #     db.drop_tables([User])
+    #     db.drop_tables([State])
 
     # def test_post(self):
     #     new_review = self.app.post('/users/1/reviews',

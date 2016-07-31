@@ -34,6 +34,10 @@ def get_reviews_user(user_id):
                                 stars=user_stars,
                                 user=user_id)
             new_review.save()
+
+            user_review = ReviewUser(user=user_id, review=new_review.id)
+            user_review.save()
+
             return jsonify(new_review.to_hash())
         except:
             return make_response(jsonify({'code': 10000,
@@ -42,17 +46,23 @@ def get_reviews_user(user_id):
 
 @app.route('/users/<user_id>/reviews/<review_id>', methods=['GET', 'DELETE'])
 def delete_reviews_user(user_id, review_id):
+    try:
+        get_review = (ReviewUser.select()
+                                .where((ReviewUser.review == review_id) &
+                                       (ReviewUser.user == user_id)).get())
+
+    except:
+        return make_response(jsonify({'code': 10000,
+                                      'msg': 'Review not found'}), 404)
     if request.method == 'GET':
-        try:
-            list = []
-            for review in Review.select().where(Review.id == review_id):
-                list.append(review.to_hash())
-            return jsonify(list)
-        except:
-            return make_response(jsonify({'code': 10000,
-                                          'msg': 'Review not found'}), 404)
+        return jsonify(get_review.to_hash())
+
     elif request.method == 'DELETE':
         try:
+            user_review = ReviewUser.where((ReviewUser.user == user_id) &
+                                           (ReviewUser.review == review_id))
+            user_review.delete_instance()
+
             get_review = Review.get(Review.id == review_id)
             get_review.delete_instance()
             return "Review was deleted"
@@ -66,8 +76,10 @@ def get_review_place(place_id):
     if request.method == 'GET':
         try:
             list = []
-            for review in ReviewPlace.select().where(ReviewPlace.place == place_id):
-                list.append(review.to_hash())
+            for review_place in (ReviewPlace
+                                 .select()
+                                 .where(ReviewPlace.place == place_id)):
+                list.append(review_place.review.to_hash())
             return jsonify(list)
         except:
             return make_response(jsonify({'code': 10000,
@@ -80,6 +92,10 @@ def get_review_place(place_id):
             Review(message=user_message,
                    stars=user_stars,
                    user=user_id)
+            Review.save()
+
+            ReviewUser(user=Review.id, place=place_id)
+
         except:
             return make_response(jsonify({'code': 10000,
                                           'msg': 'Review not found'}), 404)
@@ -90,14 +106,21 @@ def delete_reviews_place(place_id, review_id):
     if request.method == 'GET':
         try:
             list = []
-            for review in Review.select().where(Review.id == review_id):
-                list.append(review.to_hash())
+            for review_place in (ReviewPlace
+                                 .select()
+                                 .where(ReviewPlace.place == place_id)):
+                list.append(review_place.review.to_hash())
             return jsonify(list)
         except:
             return make_response(jsonify({'code': 10000,
                                           'msg': 'Review not found'}), 404)
     elif request.method == 'DELETE':
         try:
+            place_review = (ReviewPlace
+                            .get(ReviewPlace.place == place_id &
+                                 ReviewPlace.review == review_id))
+            place_review.delete_instance()
+
             get_review = Review.get(Review.id == review_id)
             get_review.delete_instance()
             return "Review was deleted"

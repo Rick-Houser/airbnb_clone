@@ -4,7 +4,7 @@ from user import User
 from review import Review
 
 
-class ReviewUser(Model):
+class ReviewUser(BaseModel):
     user = ForeignKeyField(User)
     review = ForeignKeyField(Review)
 

@@ -18,8 +18,8 @@ db.create_tables([User,
                   PlaceBook,
                   Amenity,
                   PlaceAmenities,
-                  Review,
                   ReviewPlace,
-                  ReviewUser], safe=True)
+                  ReviewUser,
+                  Review], safe=True)
 # test = User(email='foo', password='foo', first_name='foo', last_name='foo')
 # test.save()

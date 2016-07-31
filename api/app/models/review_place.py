@@ -4,10 +4,10 @@ from place import Place
 from review import Review
 
 
-class ReviewPlace(Model):
+class ReviewPlace(BaseModel):  # was not creating a data base with Model
     place = ForeignKeyField(Place)
     review = ForeignKeyField(Review)
 
 
-class Meta():
+class Meta:
     database = db
