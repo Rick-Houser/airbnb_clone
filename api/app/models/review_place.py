@@ -1,12 +1,12 @@
-from base import db
+from base import *
 from peewee import *
 from place import Place
 from review import Review
 
 
-class ReviewPlace(peewee.Model):
+class ReviewPlace(Model):
     place = ForeignKeyField(Place)
-    review = ForeinKeyField(Review)
+    review = ForeignKeyField(Review)
 
 
 class Meta():
