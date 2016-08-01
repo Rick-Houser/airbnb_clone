@@ -7,13 +7,12 @@ from app.models.place_book import PlaceBook
 import unittest
 import logging
 from app.models.user import User
-from datetime import datetime
 
 
 class place_book_test(unittest.TestCase):
     def setUp(self):
         # disabling logs
-        # logging.disable(logging.CRITICAL)
+        logging.disable(logging.CRITICAL)
         self.app = app.test_client()
         # connecting to the database
         db.connect()
@@ -77,3 +76,47 @@ class place_book_test(unittest.TestCase):
         # Getting a book from a place that exist
         get_book = self.app.get('/places/5/books')
         assert get_book.status_code == 404
+
+        # Getting a booking for a place and booking that exist
+        get_place_book = self.app.get('places/1/books/1')
+        assert get_place_book.status_code == 200
+
+        # Getting a booking for a place that does not exist
+        get_place_book = self.app.get('places/2/books/1')
+        assert get_place_book.status_code == 404
+
+        # Getting a booking that does not exist
+        get_place_book = self.app.get('places/1/books/2')
+        assert get_place_book.status_code == 404
+
+        # updating the date
+        get_update = self.app.put('/places/1/books/1',
+                                  data=dict(date_start="2016-05-07 12:00:00"))
+        assert get_update.status_code == 200
+
+        # Updating the number of nights
+        get_update = self.app.put('/places/1/books/1',
+                                  data=dict(number_nights=2))
+        assert get_update.status_code == 200
+
+        # Updating is_validated
+        get_update = self.app.put('/places/1/books/1',
+                                  data=dict(is_validated=True))
+        assert get_update.status_code == 200
+
+        # Updating User
+        get_update = self.app.put('/places/1/books/1',
+                                  data=dict(user_id=2))
+        assert get_update.status_code == 405
+
+        # Deleing a booking for a place that exist
+        book_delete = self.app.delete('/places/1/books/1')
+        assert book_delete.status_code == 200
+
+        # Deleing a booking for a place that does not exist
+        book_delete = self.app.delete('/places/3/books/1')
+        assert book_delete.status_code == 404
+
+        # Deleing a booking that does not exist
+        book_delete = self.app.delete('/places/1/books/5')
+        assert book_delete.status_code == 404

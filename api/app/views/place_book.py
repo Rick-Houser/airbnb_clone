@@ -43,6 +43,17 @@ def find_book(place_id):
 
 @app.route('/places/<int:place_id>/books/<book_id>', methods=['GET'])
 def find_booking(place_id, book_id):
+    # Checking if the place exist
+    try:
+        Place.get(Place.id == place_id)
+    except Place.DoesNotExist:
+        return jsonify({'code': 404, 'msg': 'Place not found'}), 404
+
+    # Checking if the booking exist
+    try:
+        PlaceBook.get(PlaceBook.id == book_id)
+    except PlaceBook.DoesNotExist:
+        return jsonify({'code': 404, 'msg': 'Booking not found'}), 404
     # Find a booking
     try:
         booking = PlaceBook.get(PlaceBook.id == book_id and
@@ -52,33 +63,45 @@ def find_booking(place_id, book_id):
         return jsonify({'code': 404, 'msg': 'not found'}), 404
 
 
-# @app.route('/places/<int:place_id>/books/<int:book_id>', methods=['PUT'])
-# # Modify a booking
-# def modify_booking(place_id, book_id):
-# try:
-# booking = PlaceBook.get(PlaceBook.id == book_id)
-# data = request.values()
-# for key in data:
-# if key == 'user':
-# return jsonify({'code': 405, 'msg': 'Method not allowed'}), 405
-# elif key == 'date_start':
-# booking.date_start = datetime.strptime(data[key], "%Y/%m/%d %H:%M:%S")
-# elif key == 'number_nights':
-# booking.number_nights = data[key]
-# elif key == 'is_validated':
-# booking.is_validated = data[key]
-# booking.save()
-# return booking.to_dict()
-# except:
-# return jsonify({'code': 404, 'msg': 'not found'}), 404
-#
-#
-# @app.route('/places/<int:place_id>/books/<int:book_id>', methods=['DELETE'])
-# # Delete a booking
-# def delete_booking(place_id, book_id):
-# try:
-# booking = PlaceBook.get(PlaceBook.id == book_id)
-# booking.delete_instance()
-# return jsonify({'msg': 'Deleted booking!'}), 200
-# except:
-# return jsonify({'code': 404, 'msg': 'not found'}), 404
+@app.route('/places/<int:place_id>/books/<int:book_id>', methods=['PUT'])
+def modify_booking(place_id, book_id):
+    # Modify a booking
+    try:
+        booking = PlaceBook.get(PlaceBook.id == book_id)
+        data = request.form
+        for key in data:
+            if key == 'user_id':
+                return jsonify({'code': 405, 'msg': 'Method not allowed'}), 405
+            elif key == 'date_start':
+                booking.date_start = data[key]
+            elif key == 'number_nights':
+                booking.number_nights = data[key]
+            elif key == 'is_validated':
+                booking.is_validated = data[key]
+            booking.save()
+        return jsonify(booking.to_dict())
+    except:
+        return jsonify({'code': 404, 'msg': 'not found'}), 404
+
+
+@app.route('/places/<int:place_id>/books/<int:book_id>', methods=['DELETE'])
+def delete_booking(place_id, book_id):
+    # Checking if the place exist
+    try:
+        Place.get(Place.id == place_id)
+    except Place.DoesNotExist:
+        return jsonify({'code': 404, 'msg': 'Place not found'}), 404
+
+    # Checking if the booking exist
+    try:
+        PlaceBook.get(PlaceBook.id == book_id)
+    except PlaceBook.DoesNotExist:
+        return jsonify({'code': 404, 'msg': 'Booking not found'}), 404
+    # Delete a booking
+    try:
+        booking = PlaceBook.get(PlaceBook.id == book_id and
+                                PlaceBook.place == place_id)
+        booking.delete_instance()
+        return jsonify({'msg': 'Booked place was deleted'}), 200
+    except:
+        return jsonify({'code': 404, 'msg': 'not found'}), 404
