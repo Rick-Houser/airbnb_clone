@@ -187,4 +187,3 @@ class place_test(unittest.TestCase):
                                                latitude=37.774929,
                                                longitude=-122.419416))
         assert create_place.status_code == 200
-        print create_place.data

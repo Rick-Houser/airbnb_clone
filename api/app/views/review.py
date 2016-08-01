@@ -6,6 +6,7 @@ from app.models.place import Place
 from app import app
 from flask import jsonify, request
 from flask import make_response
+import json
 
 
 @app.route('/users/<user_id>/reviews', methods=['GET', 'POST'])
@@ -110,13 +111,25 @@ def get_review_place(place_id):
 
 @app.route('/places/<place_id>/reviews/<review_id>', methods=['GET', 'DELETE'])
 def delete_reviews_place(place_id, review_id):
+    try:
+        # Checking if place exist
+        Place.select().where(Place.id == place_id).get()
+    except Place.DoesNotExist:
+        return make_response(jsonify({'code': 10000,
+                                      'msg': 'Not found'}), 404)
     if request.method == 'GET':
         try:
             list = []
             for review_place in (ReviewPlace
                                  .select()
-                                 .where(ReviewPlace.place == place_id)):
+                                 .where(ReviewPlace.place == place_id,
+                                        ReviewPlace.review == review_id)):
                 list.append(review_place.review.to_hash())
+
+            # Checking if the review is empty
+            if len(list) == 0:
+                return make_response(jsonify({'code': 10000,
+                                              'msg': 'Review not found'}), 404)
             return jsonify(list)
         except:
             return make_response(jsonify({'code': 10000,
