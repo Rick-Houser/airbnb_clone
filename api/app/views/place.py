@@ -133,3 +133,12 @@ def get_list_places(state_id):
         except:
             return make_response(jsonify({'code': '10001',
                                           'msg': 'Place not found'}), 404)
+
+
+@app.route(' /places/<int:place_id>/available', methods=['POST'])
+def make_reservation(place_id):
+    try:
+        Place.get(Place.id == place_id)
+    except Place.DoesNotExist:
+            return make_response(jsonify({'code': '10001',
+                                          'msg': 'Place not found'}), 404)
