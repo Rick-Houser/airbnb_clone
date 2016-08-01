@@ -4,6 +4,7 @@ from app import app
 from app.models.base import db
 from app.models.place import Place
 from app.models.city import City
+from app.models.state import State
 from flask import jsonify
 from flask import make_response
 
@@ -107,3 +108,28 @@ def places_within_city(state_id, city_id):
             print("You've just added a place!")
         except:
             return response
+
+
+@app.route('/states/<int:state_id>/places', methods=['GET'])
+def get_list_places(state_id):
+    try:
+        # Checking if a state exist
+        State.get(State.id == state_id)
+    except State.DoesNotExist:
+            return make_response(jsonify({'code': '10001',
+                                          'msg': 'Place not found'}), 404)
+    if request.method == 'GET':
+        try:
+            # getting a place that is in a specific state
+            place_state = (Place.select()
+                           .join(City)
+                           .where(Place.city == City.id)
+                           .join(State)
+                           .where(State.id == City.state))
+            list = []
+            for place in place_state:
+                list.append(place.to_hash())
+            return jsonify(list)
+        except:
+            return make_response(jsonify({'code': '10001',
+                                          'msg': 'Place not found'}), 404)
