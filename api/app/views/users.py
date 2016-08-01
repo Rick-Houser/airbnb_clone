@@ -13,7 +13,7 @@ def users():
         try:
             list = []
             for user in User.select():
-                list.append(user.to_hash())
+                list.append(user.to_dict())
             return jsonify(list)
         except:
             return make_response(jsonify({'code': 10000,
@@ -30,7 +30,7 @@ def users():
                             last_name=user_last_name,
                             password=md5.new(user_password).hexdigest())
             new_user.save()
-            return jsonify(new_user.to_hash())
+            return jsonify(new_user.to_dict())
         except:
             return make_response(jsonify({'code': 10000,
                                           'msg': 'email already exist'}), 409)
@@ -42,7 +42,7 @@ def modify_users(user_id):
         try:
             id = user_id
             # returning a hash with the user information
-            return jsonify(User.get(User.id == id).to_hash())
+            return jsonify(User.get(User.id == id).to_dict())
         except:
             return make_response(jsonify({'code': 10000,
                                           'msg': 'user not found'}), 404)

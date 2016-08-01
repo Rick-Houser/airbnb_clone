@@ -15,7 +15,7 @@ class User(BaseModel):
     def set_password(self, clear_password):
         self.password = md5.new(clear_password).hexdigest()
 
-    def to_hash(self):
+    def to_dict(self):
         return {'id': self.id,
                 'created_at': str(self.created_at.strftime('%d/%m/%Y %H:%M:%S')),
                 'updated_at': str(self.created_at.strftime('%d/%m/%Y %H:%M:%S')),

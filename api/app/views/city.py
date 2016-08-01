@@ -14,7 +14,7 @@ def list_cities(state_id):
     if request.method == 'GET':
         list = []
         for city in City.select().where(City.state == id_state):
-            list.append(city.to_hash())
+            list.append(city.to_dict())
         return jsonify(list)
     # creates a new city
     elif request.method == 'POST':
@@ -37,7 +37,7 @@ def modify_city(state_id, city_id):
         if request.method == 'GET':
             list = []
             for city in City.select().where(City.id == id):
-                list.append(city.to_hash())
+                list.append(city.to_dict())
             return jsonify(list)
     except:
         return "City with id %d does not exist" % (int(id))

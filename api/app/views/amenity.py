@@ -9,7 +9,7 @@ def list_amenities():
 	try:
 		amenity_list = []
 		for item in Amenity.select():
-			amenity_list.append(item.to_hash())
+			amenity_list.append(item.to_dict())
 		return jsonify(amenity_list)
 	except:
 		return jsonify({'code': 404,'msg': 'not found'}), 404
@@ -21,7 +21,7 @@ def create_amenity():
 		amenities = request.values()
 		new_amenity = Amenity.create(name = amenities['name'])
 		new_amenity.save()
-		return jsonify(new_amenity.to_hash())
+		return jsonify(new_amenity.to_dict())
 	except:
 		return jsonify({'code': 10003,'msg': 'Name already exists'}), 409
 
@@ -30,7 +30,7 @@ def create_amenity():
 	def find_amenity(amenity_id):
 		try:
 			amenity = Amenity.get(Amenity.id == amenity_id)
-			return jsonify(amenity.to_hash())
+			return jsonify(amenity.to_dict())
 		except:
 			return jsonify({'code': 404,'msg': 'not found'}), 404
 
@@ -50,7 +50,7 @@ def list_select_amenities(place_id):
 	try:
 		select_amenity_list = []
 		for item in PlaceAmenities.select().where(PlaceAmenities.place == place_id):
-			select_amenity_list.append(item.to_hash())
+			select_amenity_list.append(item.to_dict())
 		return jsonify(select_amenity_list)
 	except:
 		return jsonify({'code': 404,'msg': 'not found'}), 404

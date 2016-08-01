@@ -15,7 +15,7 @@ def list_of_place():
     if request.method == 'GET':
         list = []
         for place in Place.select():
-            list.append(place.to_hash())
+            list.append(place.to_dict())
         return jsonify(list)
 
     if request.method == 'POST':
@@ -39,7 +39,7 @@ def modify_place(place_id):
     id = place_id
     if request.method == 'GET':
         try:
-            get_place = Place.get(Place.id == id).to_hash()
+            get_place = Place.get(Place.id == id).to_dict()
             return jsonify(get_place)
         except:
             return make_response(jsonify({'code': '10001',
@@ -83,7 +83,7 @@ def places_within_city(state_id, city_id):
                          .where(Place.city == city_id, City.state == state_id))
             list = []
             for location in locations:
-                list.append(location.to_hash())
+                list.append(location.to_dict())
                 return jsonify(list)
         except:
             return response
@@ -104,7 +104,7 @@ def places_within_city(state_id, city_id):
                                      latitude=request.form['latitude'],
                                      longitude=request.form['longitude'])
             add_place.save()
-            return jsonify(add_place.to_hash())
+            return jsonify(add_place.to_dict())
             print("You've just added a place!")
         except:
             return response
@@ -128,14 +128,14 @@ def get_list_places(state_id):
                            .where(State.id == City.state))
             list = []
             for place in place_state:
-                list.append(place.to_hash())
+                list.append(place.to_dict())
             return jsonify(list)
         except:
             return make_response(jsonify({'code': '10001',
                                           'msg': 'Place not found'}), 404)
 
 
-@app.route(' /places/<int:place_id>/available', methods=['POST'])
+@app.route('/places/<int:place_id>/available', methods=['POST'])
 def make_reservation(place_id):
     try:
         Place.get(Place.id == place_id)

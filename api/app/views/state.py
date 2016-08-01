@@ -11,7 +11,7 @@ def list_of_states():
     if request.method == 'GET':
         list = []
         for state in State.select():
-            list.append(state.to_hash())
+            list.append(state.to_dict())
         return jsonify(list)
 
     if request.method == 'POST':
@@ -32,7 +32,7 @@ def modify_state(state_id):
         # displaying state by id
         if request.method == 'GET':
             id = state_id
-            return jsonify(State.get(State.id == id).to_hash())
+            return jsonify(State.get(State.id == id).to_dict())
     except:
         return "No State was found with id %d\n" % (int(id))
     if request.method == 'DELETE':

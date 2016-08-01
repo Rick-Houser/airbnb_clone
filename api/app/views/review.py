@@ -21,7 +21,7 @@ def get_reviews_user(user_id):
             list = []
             # retriving the reviews an user received
             for review_user in ReviewUser.select().where(ReviewUser.user == user_id):
-                list.append(review_user.review.to_hash())
+                list.append(review_user.review.to_dict())
             return jsonify(list)
         except:
                 return make_response(jsonify({'code': 10000,
@@ -40,7 +40,7 @@ def get_reviews_user(user_id):
             user_review = ReviewUser(user=user_id, review=new_review.id)
             user_review.save()
 
-            return jsonify(new_review.to_hash())
+            return jsonify(new_review.to_dict())
         except:
             return make_response(jsonify({'code': 10000,
                                           'msg': 'Review not found'}), 404)
@@ -57,7 +57,7 @@ def delete_reviews_user(user_id, review_id):
         return make_response(jsonify({'code': 10000,
                                       'msg': 'Review not found'}), 404)
     if request.method == 'GET':
-        return jsonify(get_review.review.to_hash())
+        return jsonify(get_review.review.to_dict())
 
     elif request.method == 'DELETE':
         try:
@@ -87,7 +87,7 @@ def get_review_place(place_id):
             for review_place in (ReviewPlace
                                  .select()
                                  .where(ReviewPlace.place == place_id)):
-                list.append(review_place.review.to_hash())
+                list.append(review_place.review.to_dict())
             return jsonify(list)
         except:
             return make_response(jsonify({'code': 10000,
@@ -103,7 +103,7 @@ def get_review_place(place_id):
 
             review_place = ReviewPlace(review=new_review.id, place=place_id)
             review_place.save()
-            return jsonify(new_review.to_hash())
+            return jsonify(new_review.to_dict())
         except:
             return make_response(jsonify({'code': 10000,
                                           'msg': 'Review not found'}), 404)
@@ -124,7 +124,7 @@ def delete_reviews_place(place_id, review_id):
                                  .select()
                                  .where(ReviewPlace.place == place_id,
                                         ReviewPlace.review == review_id)):
-                list.append(review_place.review.to_hash())
+                list.append(review_place.review.to_dict())
 
             # Checking if the review is empty
             if len(list) == 0:

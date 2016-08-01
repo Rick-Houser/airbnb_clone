@@ -10,7 +10,7 @@ class PlaceBook(BaseModel):
     date_start = DateTimeField(null=False)
     number_nights = IntegerField(default=1)
 
-    def to_hash(self):
+    def to_dict(self):
         return {'id': self.id,
                 'created_at': self.created_at,
                 'updated_at': self.updated_at,

@@ -15,7 +15,7 @@ class Place(BaseModel):
     latitude = FloatField()
     longitude = FloatField()
 
-    def to_hash(self):
+    def to_dict(self):
         return {'id': self.id,
                 'created_at': self.created_at.strftime('%d/%m/%Y %H:%M:%S'),
                 'updated_at': self.updated_at.strftime('%d/%m/%Y %H:%M:%S'),

@@ -11,7 +11,7 @@ class Review(BaseModel):
     stars = IntegerField(default=0)
     user = ForeignKeyField(User, related_name="reviews", on_delete='cascade')
 
-    def to_hash(self):
+    def to_dict(self):
         from review_user import ReviewUser
         from review_place import ReviewPlace
 

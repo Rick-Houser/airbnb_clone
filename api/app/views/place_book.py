@@ -10,7 +10,7 @@ def find_book(place_id):
 		books = PlaceBook.select().where(PlaceBook.place == place_id)
 		book_list = []
 		for book in books:
-			book_list.append(book.to_hash())
+			book_list.append(book.to_dict())
 		return jsonify(book_list)
 	except:
 		return jsonify({'code': 404,'msg': 'not found'}), 404
@@ -27,7 +27,7 @@ def create_book(place_id):
 		 	number_nights = data['number_nights'],
 		 	is_validated = data['is_validated'])
 		new_book.save()
-		return new_book.to_hash()
+		return new_book.to_dict()
 	except:
 		return jsonify({'code': 404,'msg': 'not found'}), 404
 
@@ -36,7 +36,7 @@ def create_book(place_id):
 def find_booking(place_id, book_id):
 	try:
 		booking = PlaceBook.get(PlaceBook.id == book_id)
-		return booking.to_hash()
+		return booking.to_dict()
 	except:
 		return jsonify({'code': 404,'msg': 'not found'}), 404
 
@@ -56,7 +56,7 @@ def modify_booking(place_id, book_id):
 			elif key == 'is_validated':
 				booking.is_validated = data[key]
 		booking.save()
-		return booking.to_hash()
+		return booking.to_dict()
 	except:
 		return jsonify({'code': 404,'msg': 'not found'}), 404
 
