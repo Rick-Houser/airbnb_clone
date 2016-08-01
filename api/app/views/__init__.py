@@ -1,1 +1,1 @@
-__all__ = ["index", "users", "state", "city", "place", "review"]
+__all__ = ["index", "users", "state", "city", "place", "review", "place_book"]

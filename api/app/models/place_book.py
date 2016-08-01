@@ -12,10 +12,10 @@ class PlaceBook(BaseModel):
 
     def to_dict(self):
         return {'id': self.id,
-                'created_at': self.created_at,
-                'updated_at': self.updated_at,
-                'place_id': self.place,
-                'user_id': self.user,
+                'created_at': str(self.created_at.strftime('%d/%m/%Y %H:%M:%S')),
+                'updated_at': str(self.updated_at.strftime('%d/%m/%Y %H:%M:%S')),
+                'place_id': self.place.id,
+                'user_id': self.user.id,
                 'is_validated': self.is_validated,
                 'date_start': self.date_start,
                 'number_nights': self.number_nights

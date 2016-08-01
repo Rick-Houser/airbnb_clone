@@ -7,6 +7,7 @@ from app.models.place_book import PlaceBook
 import unittest
 import logging
 from app.models.user import User
+from datetime import datetime
 
 
 class place_book_test(unittest.TestCase):
@@ -55,9 +56,24 @@ class place_book_test(unittest.TestCase):
         db.drop_tables([User])
 
     def test_create(self):
-
-        new_book = self.app.post('/places/1/books/',
-                                 data=dict(user=1,
-                                           date_start='2016/01/01',
+        # Creating a new book for a place
+        new_book = self.app.post('/places/1/books',
+                                 data=dict(user_id=1,
+                                           date_start="2016-05-01 12:00:00",
                                            number_nights=5))
-        print new_book.status_code
+        assert new_book.status_code == 200
+
+        # Creating a new book for a place that does not exist
+        new_book = self.app.post('/places/5/books',
+                                 data=dict(user_id=1,
+                                           date_start="2016-05-01 12:00:00",
+                                           number_nights=5))
+        assert new_book.status_code == 404
+
+        # Getting a book from a place that exist
+        get_book = self.app.get('/places/1/books')
+        assert get_book.status_code == 200
+
+        # Getting a book from a place that exist
+        get_book = self.app.get('/places/5/books')
+        assert get_book.status_code == 404
