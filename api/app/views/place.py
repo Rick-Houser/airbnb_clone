@@ -7,6 +7,10 @@ from app.models.city import City
 from app.models.state import State
 from flask import jsonify
 from flask import make_response
+from app.models.place_book import PlaceBook
+import json
+from datetime import datetime
+from datetime import timedelta
 
 
 @app.route('/places', methods=['GET', 'POST'])
@@ -142,3 +146,32 @@ def make_reservation(place_id):
     except Place.DoesNotExist:
             return make_response(jsonify({'code': '10001',
                                           'msg': 'Place not found'}), 404)
+    if request.method == "POST":
+        year = int(request.form["year"])
+        month = int(request.form["month"])
+        day = int(request.form["day"])
+
+        try:
+            # getting the place
+            get_booking = PlaceBook.get(PlaceBook.place == place_id)
+
+            # Creating a datetime with the post parameters
+            date_object = datetime(year, month, day).strftime("%d/%m/%Y")
+
+            # getting the date from start and formatting its
+            date = get_booking.to_dict()['date_start'].strftime("%d/%m/%Y")
+
+            # Getting the duration of the booking
+            duration = get_booking.to_dict()['number_nights']
+
+            # Getting the exact day of checkout
+            total_days = (get_booking.to_dict()['date_start'] +
+                          timedelta(duration)).strftime("%d/%m/%Y")
+
+            if date_object >= date and date_object <= total_days:
+                return jsonify({'Available': False})
+            else:
+                return jsonify({'Available': True})
+        except:
+            return make_response(jsonify({'code': '10001',
+                                          'msg': 'Wrong date format'}), 400)

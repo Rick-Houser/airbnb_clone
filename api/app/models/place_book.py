@@ -7,7 +7,7 @@ class PlaceBook(BaseModel):
     place = ForeignKeyField(Place)
     user = ForeignKeyField(User, related_name="placesbooked")
     is_validated = BooleanField(default=False)
-    date_start = DateTimeField(null=False)
+    date_start = DateTimeField(null=False, formats=['%Y/%m/%d'])
     number_nights = IntegerField(default=1)
 
     def to_dict(self):
