@@ -3,9 +3,12 @@ from app.models.place_book import PlaceBook
 from flask import Flask, jsonify, request
 from datetime import datetime
 from app.models.place import Place
+from datetime import datetime
+from datetime import timedelta
+from flask import make_response
 
 
-@app.route('/places/<place_id>/books', methods=["GET", "POST"])
+@app.route('/places/<int:place_id>/books', methods=["GET", "POST"])
 # List all books for a selected place
 def find_book(place_id):
     # Checking if the place exist
@@ -25,17 +28,48 @@ def find_book(place_id):
         except:
             return jsonify({'code': 404, 'msg': 'Book not found'}), 404
     if request.method == "POST":
+        # cheking if there is a place
+        try:
+            # getting the place
+            get_booking = PlaceBook.get(PlaceBook.place == place_id)
+
+            # getting the date from start and formatting its
+            date = get_booking.to_dict()['date_start'].strftime("%d/%m/%Y")
+
+            # Getting the duration of the booking
+            duration = get_booking.to_dict()['number_nights']
+
+            # Getting the exact day of checkout
+            total_days = (get_booking.to_dict()['date_start'] +
+                          timedelta(duration)).strftime("%d/%m/%Y")
+        except:
+            date = datetime(0000, 00, 00).strftime("%d/%m/%Y")
+            total_days = datetime(0000, 00, 00).strftime("%d/%m/%Y")
+
         try:
             # Create a new booking from POST data for a selected place
             get_user = request.form['user_id']
             get_date = request.form['date_start']
             get_nights = request.form['number_nights']
-            new_book = PlaceBook(place=place_id,
-                                 user=get_user,
-                                 date_start=get_date,
-                                 number_nights=get_nights)
-            new_book.save()
-            return jsonify(new_book.to_dict())
+            # formatting the date
+            get_date = get_nights.strftime("%d/%m/%Y")
+            # adding the date_start plus the number of nights
+            total_date = (get_date +
+                          timedelta(get_nights)).strftime("%d/%m/%Y")
+
+            # Checking if the place is Available in the desired dates
+            if get_date >= date and total_date <= total_days:
+                return make_response(
+                       jsonify({'code': '110000',
+                                'msg': "Place unavailable at this date"}), 410)
+            else:
+                # Booking the place since it is Available
+                new_book = PlaceBook(place=place_id,
+                                     user=get_user,
+                                     date_start=get_date,
+                                     number_nights=get_nights)
+                new_book.save()
+                return jsonify(new_book.to_dict())
 
         except:
             return jsonify({'code': 404, 'msg': 'not found'}), 404
@@ -105,9 +139,3 @@ def delete_booking(place_id, book_id):
         return jsonify({'msg': 'Booked place was deleted'}), 200
     except:
         return jsonify({'code': 404, 'msg': 'not found'}), 404
-
-
-@app.route('/places/<place_id>/book', methods=['POST'])
-def booked(place_id):
-    if request.method == 'POST':
-        PlaceBook.get(PlaceBook.place == place_id)

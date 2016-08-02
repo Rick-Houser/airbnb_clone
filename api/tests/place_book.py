@@ -120,3 +120,6 @@ class place_book_test(unittest.TestCase):
         # Deleing a booking that does not exist
         book_delete = self.app.delete('/places/1/books/5')
         assert book_delete.status_code == 404
+
+        get_book = self.app.post('/places/1/book',
+                                 data=dict())
