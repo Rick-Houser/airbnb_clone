@@ -252,17 +252,3 @@ class place_test(unittest.TestCase):
                                              latitude=37.774929,
                                              longitude=-122.419416))
         assert new_place.status_code == 200
-
-        # Creating a new book for a place
-        new_book = self.app.post('/places/1/books',
-                                 data=dict(user_id=1,
-                                           date_start="2016-05-01",
-                                           number_nights=5))
-        assert new_book.status_code == 200
-
-        # Checking to see if a place is avalable for a date
-        get_date = self.app.post('/places/1/available',
-                                 data=dict(year=2016,
-                                           month=05,
-                                           day=7))
-        assert get_date.status_code == 200

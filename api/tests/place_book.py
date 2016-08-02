@@ -12,7 +12,7 @@ from app.models.user import User
 class place_book_test(unittest.TestCase):
     def setUp(self):
         # disabling logs
-        logging.disable(logging.CRITICAL)
+        # logging.disable(logging.CRITICAL)
         self.app = app.test_client()
         # connecting to the database
         db.connect()
@@ -62,6 +62,21 @@ class place_book_test(unittest.TestCase):
                                            number_nights=5))
         assert new_book.status_code == 200
 
+        # trying to book for a date that is already taken
+        new_book = self.app.post('/places/1/books',
+                                 data=dict(user_id=1,
+                                           date_start="2016-05-6 12:00:00",
+                                           number_nights=5))
+        assert new_book.status_code == 410
+
+        # trying to book for a date after the last day of the last book
+        new_book = self.app.post('/places/1/books',
+                                 data=dict(user_id=1,
+                                           date_start="2016-05-7 12:00:00",
+                                           number_nights=5))
+        assert new_book.status_code == 200
+
+
         # Creating a new book for a place that does not exist
         new_book = self.app.post('/places/5/books',
                                  data=dict(user_id=1,
@@ -86,7 +101,7 @@ class place_book_test(unittest.TestCase):
         assert get_place_book.status_code == 404
 
         # Getting a booking that does not exist
-        get_place_book = self.app.get('places/1/books/2')
+        get_place_book = self.app.get('places/1/books/3')
         assert get_place_book.status_code == 404
 
         # updating the date
@@ -120,6 +135,3 @@ class place_book_test(unittest.TestCase):
         # Deleing a booking that does not exist
         book_delete = self.app.delete('/places/1/books/5')
         assert book_delete.status_code == 404
-
-        get_book = self.app.post('/places/1/book',
-                                 data=dict())
