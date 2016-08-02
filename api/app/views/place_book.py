@@ -74,7 +74,7 @@ def modify_booking(place_id, book_id):
                 return jsonify({'code': 405, 'msg': 'Method not allowed'}), 405
             elif key == 'date_start':
                 booking.date_start = data[key]
-            elif key == 'number_nights':
+            elif key == '`number_nights`':
                 booking.number_nights = data[key]
             elif key == 'is_validated':
                 booking.is_validated = data[key]
@@ -105,3 +105,9 @@ def delete_booking(place_id, book_id):
         return jsonify({'msg': 'Booked place was deleted'}), 200
     except:
         return jsonify({'code': 404, 'msg': 'not found'}), 404
+
+
+@app.route('/places/<place_id>/book', methods=['POST'])
+def booked(place_id):
+    if request.method == 'POST':
+        PlaceBook.get(PlaceBook.place == place_id)
