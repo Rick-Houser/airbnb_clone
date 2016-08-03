@@ -1,12 +1,12 @@
 from peewee import *
 from amenity import *
 from place import *
+from base import *
 
-from base import db
 
-class PlaceAmenities(Model):
+class PlaceAmenities(BaseModel):
     place = ForeignKeyField(Place)
     amenity = ForeignKeyField(Amenity)
 
-    class Meta():
-        database = db
+    # class Meta():
+    #     database = db

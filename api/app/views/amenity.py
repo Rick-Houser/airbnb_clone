@@ -21,13 +21,12 @@ def list_amenities():
 # Create a new amenity from POST data parameters
 @app.route('/amenities', methods=['POST'])
 def create_amenity():
-    try:
-        amenities = request.values()
-        new_amenity = Amenity.create(name=amenities['name'])
-        new_amenity.save()
-        return jsonify(new_amenity.to_dict())
-    except:
-        return jsonify({'code': 10003, 'msg': 'Name already exists'}), 409
+    # try:
+    new_amenity = Amenity(name=request.form['name'])
+    new_amenity.save()
+    return jsonify(new_amenity.to_dict())
+    # except:
+    #     return jsonify({'code': 10003, 'msg': 'Name already exists'}), 409
 
 
 # Get amenity by id
@@ -55,9 +54,15 @@ def delete_amenity(amenity_id):
 @app.route('/places/<place_id>/amenities', methods=['GET'])
 def list_select_amenities(place_id):
     try:
-        select_amenity_list = []
-        for item in PlaceAmenities.select().where(PlaceAmenities.place == place_id):
-            select_amenity_list.append(item.to_dict())
-            return jsonify(select_amenity_list)
-    except:
-        return jsonify({'code': 404, 'msg': 'not found'}), 404
+        Place.get(Place.id == place_id)
+    except Place.DoesNotExist:
+        return jsonify({'code': 404, 'msg': ' place not found'}), 404
+
+    list = []
+    get_amenity = (Amenity.select()
+                   .join(PlaceAmenities)
+                   .where(Amenity.id == PlaceAmenities.amenity)
+                   .where(PlaceAmenities.place == place_id))
+    for item in get_amenity:
+        list.append(item.to_dict())
+    return jsonify(list)
