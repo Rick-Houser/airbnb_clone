@@ -76,7 +76,6 @@ class place_book_test(unittest.TestCase):
                                            number_nights=5))
         assert new_book.status_code == 200
 
-
         # Creating a new book for a place that does not exist
         new_book = self.app.post('/places/5/books',
                                  data=dict(user_id=1,

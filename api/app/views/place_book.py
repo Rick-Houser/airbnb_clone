@@ -6,6 +6,7 @@ from app.models.place import Place
 from datetime import datetime
 from datetime import timedelta
 from flask import make_response
+from return_styles import ListStyle
 
 
 @app.route('/places/<int:place_id>/books', methods=["GET", "POST"])
@@ -20,11 +21,9 @@ def find_book(place_id):
     if request.method == "GET":
         try:
             # Selecting the place booked
-            books = PlaceBook.select().where(PlaceBook.place == place_id)
-            book_list = []
-            for book in books:
-                book_list.append(book.to_dict())
-                return jsonify(book_list)
+            list = ListStyle.list(PlaceBook.select()
+                                  .where(PlaceBook.place == place_id), request)
+            return jsonify(list)
         except:
             return jsonify({'code': 404, 'msg': 'Book not found'}), 404
     if request.method == "POST":
