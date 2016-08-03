@@ -4,16 +4,15 @@ from datetime import datetime
 from app.models.place import Place
 from app.models.amenity import Amenity
 from app.models.place_amenity import PlaceAmenities
+from return_styles import ListStyle
 
 
 # Get list of amenities
 @app.route('/amenities', methods=['GET'])
 def list_amenities():
     try:
-        amenity_list = []
-        for item in Amenity.select():
-            amenity_list.append(item.to_dict())
-            return jsonify(amenity_list)
+        list = ListStyle.list(Amenity.select(), request)
+        return jsonify(list)
     except:
         return jsonify({'code': 404, 'msg': 'not found'}), 404
 
@@ -21,20 +20,20 @@ def list_amenities():
 # Create a new amenity from POST data parameters
 @app.route('/amenities', methods=['POST'])
 def create_amenity():
-    # try:
-    new_amenity = Amenity(name=request.form['name'])
-    new_amenity.save()
-    return jsonify(new_amenity.to_dict())
-    # except:
-    #     return jsonify({'code': 10003, 'msg': 'Name already exists'}), 409
+    try:
+        new_amenity = Amenity(name=request.form['name'])
+        new_amenity.save()
+        return jsonify(new_amenity.to_dict())
+    except:
+        return jsonify({'code': 10003, 'msg': 'Name already exists'}), 409
 
 
 # Get amenity by id
 @app.route('/amenities/<amenity_id>', methods=['GET'])
 def find_amenity(amenity_id):
     try:
-        amenity = Amenity.get(Amenity.id == amenity_id)
-        return jsonify(amenity.to_dict())
+        list = Amenity.get(Amenity.id == amenity_id)
+        return jsonify(list.to_dict())
     except:
         return jsonify({'code': 404, 'msg': 'not found'}), 404
 
@@ -58,13 +57,11 @@ def list_select_amenities(place_id):
     except Place.DoesNotExist:
         return jsonify({'code': 404, 'msg': ' place not found'}), 404
 
-    list = []
-    get_amenity = (Amenity.select()
-                   .join(PlaceAmenities)
-                   .where(Amenity.id == PlaceAmenities.amenity)
-                   .where(PlaceAmenities.place == place_id))
-    for item in get_amenity:
-        list.append(item.to_dict())
+    list = ListStyle.list(Amenity.select()
+                          .join(PlaceAmenities)
+                          .where(Amenity.id == PlaceAmenities.amenity)
+                          .where(PlaceAmenities.place == place_id), request)
+
     return jsonify(list)
 
 

@@ -13,9 +13,6 @@ def list_cities(state_id):
     id_state = state_id
     # returns a json with the cities associated to a state
     if request.method == 'GET':
-        # list = []
-        # for city in City.select().where(City.state == id_state):
-        #     list.append(city.to_dict())
         list = ListStyle.list(City.select()
                               .where(City.state == id_state), request)
         return jsonify(list)
@@ -38,9 +35,6 @@ def modify_city(state_id, city_id):
     id = city_id
     try:
         if request.method == 'GET':
-            # list = []
-            # for city in City.select().where(City.id == id):
-            #     list.append(city.to_dict())
             list = ListStyle.list(City.select()
                                   .where(City.id == city_id
                                          and City.state == state_id), request)
