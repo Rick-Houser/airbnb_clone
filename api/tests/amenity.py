@@ -148,3 +148,19 @@ class AmenitiesTest(unittest.TestCase):
         # testing amenities for a different place that does not exist
         get_place_amenity = self.app.get('/places/3/amenities')
         assert get_place_amenity.status_code == 404
+
+        # creating a new amenity to a place
+        add_amenity = self.app.post('/places/1/amenities/1')
+        assert add_amenity.status_code == 200
+
+        # creating a new amenity to a place that does not exist
+        add_amenity = self.app.post('/places/3/amenities/1')
+        assert add_amenity.status_code == 404
+
+        # creating a new amenity that does not exist for a place
+        add_amenity = self.app.post('/places/1/amenities/3')
+        assert add_amenity.status_code == 404
+
+        # deleting amenities from a place
+        delete_amenity = self.app.delete('/places/1/amenities/1')
+        assert delete_amenity.status_code == 200

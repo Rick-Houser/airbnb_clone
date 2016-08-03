@@ -66,3 +66,30 @@ def list_select_amenities(place_id):
     for item in get_amenity:
         list.append(item.to_dict())
     return jsonify(list)
+
+
+@app.route('/places/<place_id>/amenities/<amenity_id>',
+           methods=['POST', 'DELETE'])
+def update(place_id, amenity_id):
+    # Checking if place exist
+    try:
+        Place.get(Place.id == place_id)
+    except Place.DoesNotExist:
+        return jsonify({'code': 404, 'msg': 'Place not found'}), 404
+
+    # Checking is Amenity exist
+    try:
+        Amenity.get(Amenity.id == amenity_id)
+    except Amenity.DoesNotExist:
+        return jsonify({'code': 404, 'msg': 'Amenity not found'}), 404
+
+    if request.method == "POST":
+        new_place_amenity = PlaceAmenities(place=place_id, amenity=amenity_id)
+        new_place_amenity.save()
+        return jsonify(new_place_amenity.amenity.to_dict())
+
+    elif request.method == "DELETE":
+        get_place_a = PlaceAmenities.get(PlaceAmenities.place == place_id and
+                                         PlaceAmenities.amenity == amenity_id)
+        get_place_a.delete_instance
+        return "amenity deleted"
