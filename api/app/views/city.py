@@ -5,6 +5,7 @@ from app.models.city import City
 from app.models.base import db
 from flask import jsonify
 from flask import make_response
+from return_styles import ListStyle
 
 
 @app.route('/states/<state_id>/cities', methods=['GET', 'POST'])
@@ -12,9 +13,11 @@ def list_cities(state_id):
     id_state = state_id
     # returns a json with the cities associated to a state
     if request.method == 'GET':
-        list = []
-        for city in City.select().where(City.state == id_state):
-            list.append(city.to_dict())
+        # list = []
+        # for city in City.select().where(City.state == id_state):
+        #     list.append(city.to_dict())
+        list = ListStyle.list(City.select()
+                              .where(City.state == id_state), request)
         return jsonify(list)
     # creates a new city
     elif request.method == 'POST':
@@ -35,9 +38,12 @@ def modify_city(state_id, city_id):
     id = city_id
     try:
         if request.method == 'GET':
-            list = []
-            for city in City.select().where(City.id == id):
-                list.append(city.to_dict())
+            # list = []
+            # for city in City.select().where(City.id == id):
+            #     list.append(city.to_dict())
+            list = ListStyle.list(City.select()
+                                  .where(City.id == city_id
+                                         and City.state == state_id), request)
             return jsonify(list)
     except:
         return "City with id %d does not exist" % (int(id))
