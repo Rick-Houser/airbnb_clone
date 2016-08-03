@@ -8,18 +8,16 @@ from app.models.state import State
 from flask import jsonify
 from flask import make_response
 from app.models.place_book import PlaceBook
-import json
 from datetime import datetime
 from datetime import timedelta
+from return_styles import ListStyle
 
 
 @app.route('/places', methods=['GET', 'POST'])
 def list_of_place():
     # returning a list of all places
     if request.method == 'GET':
-        list = []
-        for place in Place.select():
-            list.append(place.to_dict())
+        list = ListStyle.list(Place.select(), request)
         return jsonify(list)
 
     if request.method == 'POST':
@@ -81,14 +79,12 @@ def places_within_city(state_id, city_id):
     # Getting the information for the place
     if request.method == 'GET':
         try:
-            locations = (Place.select()
-                         .join(City)
-                         .where(City.id == city_id)
-                         .where(Place.city == city_id, City.state == state_id))
-            list = []
-            for location in locations:
-                list.append(location.to_dict())
-                return jsonify(list)
+            list = ListStyle.list(Place.select()
+                                  .join(City)
+                                  .where(City.id == city_id)
+                                  .where(Place.city == city_id,
+                                         City.state == state_id), request)
+            return jsonify(list)
         except:
             return response
     # Creating a new place
@@ -125,14 +121,11 @@ def get_list_places(state_id):
     if request.method == 'GET':
         try:
             # getting a place that is in a specific state
-            place_state = (Place.select()
-                           .join(City)
-                           .where(Place.city == City.id)
-                           .join(State)
-                           .where(State.id == City.state))
-            list = []
-            for place in place_state:
-                list.append(place.to_dict())
+            list = ListStyle.list(Place.select()
+                                  .join(City)
+                                  .where(Place.city == City.id)
+                                  .join(State)
+                                  .where(State.id == City.state), request)
             return jsonify(list)
         except:
             return make_response(jsonify({'code': '10001',

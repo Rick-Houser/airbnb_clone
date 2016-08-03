@@ -59,7 +59,6 @@ class place_test(unittest.TestCase):
         assert new_place.status_code == 200
         # Getting place
         get_place = self.app.get('/places')
-        # print get_place.data
         assert get_place.status_code == 200
 
     def test_get(self):
