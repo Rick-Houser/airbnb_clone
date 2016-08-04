@@ -6,22 +6,31 @@ from app.models.place import Place
 from app import app
 from flask import jsonify, request
 from flask import make_response
-import json
+from return_styles import ListStyle
 
 
 @app.route('/users/<user_id>/reviews', methods=['GET', 'POST'])
 def get_reviews_user(user_id):
+    # Checking if an user exist
     try:
-        User.select().where(User.id == user_id).get()
+        User.get(User.id == user_id)
     except User.DoesNotExist:
         return jsonify(msg="There is no user with this id."), 404
+
     # Getting all the review by user id
     if request.method == "GET":
         try:
-            list = []
+            # Checking if a review exist on a specific user
+            try:
+                ReviewUser.get(ReviewUser.user == user_id)
+            except:
+                return jsonify(msg="There is no review for an user with this id."), 404
             # retriving the reviews an user received
-            for review_user in ReviewUser.select().where(ReviewUser.user == user_id):
-                list.append(review_user.review.to_dict())
+            list = ListStyle.list(User.select()
+                                      .join(ReviewUser)
+                                      .where(ReviewUser.user == User.id)
+                                      .where(ReviewUser.user == user_id),
+                                  request)
             return jsonify(list)
         except:
                 return make_response(jsonify({'code': 10000,
@@ -48,6 +57,7 @@ def get_reviews_user(user_id):
 
 @app.route('/users/<user_id>/reviews/<review_id>', methods=['GET', 'DELETE'])
 def delete_reviews_user(user_id, review_id):
+    # Checking if the review exist
     try:
         get_review = (ReviewUser.select()
                                 .where((ReviewUser.review == review_id) &
@@ -57,6 +67,7 @@ def delete_reviews_user(user_id, review_id):
         return make_response(jsonify({'code': 10000,
                                       'msg': 'Review not found'}), 404)
     if request.method == 'GET':
+        # getting the review with the id review and user id
         return jsonify(get_review.review.to_dict())
 
     elif request.method == 'DELETE':
@@ -83,11 +94,12 @@ def get_review_place(place_id):
                                       'msg': 'Place not found'}), 404)
     if request.method == 'GET':
         try:
-            list = []
-            for review_place in (ReviewPlace
-                                 .select()
-                                 .where(ReviewPlace.place == place_id)):
-                list.append(review_place.review.to_dict())
+            # Getting the all the reviews for a place
+            list = ListStyle.list(Review.select()
+                                  .join(ReviewPlace)
+                                  .where(ReviewPlace.review == Review.id)
+                                  .where(ReviewPlace.place == place_id),
+                                  request)
             return jsonify(list)
         except:
             return make_response(jsonify({'code': 10000,
@@ -119,17 +131,15 @@ def delete_reviews_place(place_id, review_id):
                                       'msg': 'Not found'}), 404)
     if request.method == 'GET':
         try:
-            list = []
-            for review_place in (ReviewPlace
-                                 .select()
-                                 .where(ReviewPlace.place == place_id,
-                                        ReviewPlace.review == review_id)):
-                list.append(review_place.review.to_dict())
-
-            # Checking if the review is empty
-            if len(list) == 0:
-                return make_response(jsonify({'code': 10000,
-                                              'msg': 'Review not found'}), 404)
+            # Checking if a review exist
+            Review.get(Review.id == review_id)
+            # Getting the review for a place
+            list = ListStyle.list(Review.select()
+                                  .join(ReviewPlace)
+                                  .where(ReviewPlace.review == Review.id)
+                                  .where(ReviewPlace.place == place_id and
+                                         ReviewPlace.review == review_id),
+                                  request)
             return jsonify(list)
         except:
             return make_response(jsonify({'code': 10000,

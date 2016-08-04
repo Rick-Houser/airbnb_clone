@@ -16,7 +16,7 @@ class review_test(unittest.TestCase):
 
     def setUp(self):
         self.app = app.test_client()
-        logging.disable(logging.CRITICAL)
+        # logging.disable(logging.CRITICAL)
         # connectting to database
         db.connect()
         db.create_tables([User], safe=True)
@@ -81,10 +81,8 @@ class review_test(unittest.TestCase):
         assert len(json.loads(get_review.data)) == 1
         # # getting a review for  user that does exist but no reviews
         get_review = self.app.get('/users/2/reviews')
-        assert get_review.status_code == 200
+        assert get_review.status_code == 404
         # this user doesnt have reviews
-        assert len(json.loads(get_review.data)) == 0
-
 
     def test_get_review(self):
 
@@ -109,7 +107,6 @@ class review_test(unittest.TestCase):
         # this user does have reviews
         assert len(get_review.data) > 0
 
-
     def test_delete(self):
         # creating a review by an user that exist
         new_review = self.app.post('/users/1/reviews',
@@ -121,7 +118,6 @@ class review_test(unittest.TestCase):
         # checking how many reviews there are before deleting
         get_review = self.app.get('/users/1/reviews')
         assert get_review.status_code == 200
-        size_before = len(json.loads(get_review.data))
 
         # delition of a review that does not exist
         deleting_review = self.app.delete('/users/1/reviews/3')
@@ -136,10 +132,7 @@ class review_test(unittest.TestCase):
         assert deleting_review.status_code == 200
         # checking how many reviews there are after deleting
         get_review = self.app.get('/users/1/reviews')
-        assert get_review.status_code == 200
-        size_after = len(json.loads(get_review.data))
-        # checking that the size is smaller after deleting
-        assert size_after < size_before
+        assert get_review.status_code == 404
 
     def test_review_place(self):
         # Creating a setUp
