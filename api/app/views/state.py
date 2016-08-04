@@ -4,14 +4,13 @@ from app import app
 from app.models.base import db
 from app.models.state import State
 from flask_json import jsonify
+from return_styles import ListStyle
 
 
 @app.route('/states', methods=['GET', 'POST'])
 def list_of_states():
     if request.method == 'GET':
-        list = []
-        for state in State.select():
-            list.append(state.to_dict())
+        list = ListStyle.list(State.select(), request)
         return jsonify(list)
 
     if request.method == 'POST':
@@ -23,7 +22,8 @@ def list_of_states():
             # returning the new information in hash form
             return "New State entered! -> %s\n" % (new_state.name)
         except:
-            return make_response(jsonify({'code': 10000, 'msg': 'State already exist'}), 409)
+            return make_response(jsonify({'code': 10000,
+                                          'msg': 'State already exist'}), 409)
 
 
 @app.route('/states/<state_id>', methods=['GET', 'DELETE'])
@@ -31,8 +31,7 @@ def modify_state(state_id):
     try:
         # displaying state by id
         if request.method == 'GET':
-            id = state_id
-            return jsonify(State.get(State.id == id).to_dict())
+            return jsonify(State.get(State.id == state_id).to_dict())
     except:
         return "No State was found with id %d\n" % (int(id))
     if request.method == 'DELETE':
