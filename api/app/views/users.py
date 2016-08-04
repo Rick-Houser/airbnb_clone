@@ -5,15 +5,15 @@ from app import app
 from peewee import *
 from flask import make_response
 import md5
+from return_styles import ListStyle
 
 
 @app.route('/users', methods=['GET', 'POST'])
 def users():
     if request.method == 'GET':
         try:
-            list = []
-            for user in User.select():
-                list.append(user.to_dict())
+            # Getting all the users
+            list = ListStyle.list(User.select(), request)
             return jsonify(list)
         except:
             return make_response(jsonify({'code': 10000,
