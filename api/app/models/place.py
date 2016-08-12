@@ -3,6 +3,19 @@ from base import *
 from user import *
 from city import *
 
+'''
+ Place:
+    - owner: foreign key to User
+    - city: foreing key to City
+    - name: place name, cannot be empty
+    - description: text field for description of place
+    - number_rooms: integer with default set to 0, num rooms available
+    - number_bathrooms: integer with default set to 0, num restrooms available
+    - max_guest: integer with default set to 0, num guests staying
+    - price_by_night: integer with default set to 0, price per night
+    - latitude: float
+    - longitude: float
+'''
 class Place(BaseModel):
     owner = ForeignKeyField(User, related_name="places")
     city = ForeignKeyField(City, related_name="places")
