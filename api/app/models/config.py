@@ -1,5 +1,9 @@
 import os
 
+'''
+Configuration based on environments 'production' and 'test'.
+Default to development.
+'''
 
 name = os.environ.get('AIRBNB_ENV')
 
