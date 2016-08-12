@@ -10,6 +10,9 @@ from review import Review
 from review_place import ReviewPlace
 from review_user import ReviewUser
 
+'''
+Connect to database and create tables
+'''
 db.connect()
 db.create_tables([User,
                   State,
