@@ -2,7 +2,14 @@ from base import *
 from place import *
 from user import *
 
-
+'''
+ PlaceBook:
+    - place: foreign key to Place
+    - user: foreign key to User
+    - is_validated: bool field, default is false
+    - date_start: date with specific format(YYYY/MM/DD)
+    - number_nights: integer, num days staying
+'''
 class PlaceBook(BaseModel):
     place = ForeignKeyField(Place)
     user = ForeignKeyField(User, related_name="placesbooked")
