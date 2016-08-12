@@ -1,3 +1,8 @@
+'''
+Configuration based on environments 'production' and 'test'.
+Default to development.
+'''
+
 import os
 
 
