@@ -3,8 +3,12 @@ from peewee import *
 from place import Place
 from review import Review
 
-
-class ReviewPlace(BaseModel):  # was not creating a data base with Model
+'''
+ ReviewPlace:
+    - place: foreign key to Place
+    - review: foreign key to Review
+'''
+class ReviewPlace(BaseModel):
     place = ForeignKeyField(Place)
     review = ForeignKeyField(Review)
 
