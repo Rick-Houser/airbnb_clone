@@ -1,6 +1,9 @@
 from base import *
 
-
+'''
+ State:
+    - name: Character field, cannot be blank and must be unique
+'''
 class State(BaseModel):
     name = peewee.CharField(128, null=False, unique=True)
 
