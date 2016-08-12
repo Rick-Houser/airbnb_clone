@@ -5,7 +5,12 @@ from base import *
 # from review_user import ReviewUser
 # from review_place import ReviewPlace
 
-
+'''
+ Review:
+    - message: text field, cannot be blank
+    - stars: int, set to 0 by default
+    - user: foreign key to User
+'''
 class Review(BaseModel):
     message = TextField(null=False)
     stars = IntegerField(default=0)
