@@ -21,25 +21,25 @@ class city_test(unittest.TestCase):
         db.drop_tables([City])
         db.drop_tables([State])
 
-    # def test_create(self):
-    #     # creating a state
-    #     new_state = self.app.post('/states', data=dict(name='California'))
-    #     assert new_state.status_code == 200
-    #     # print new_state.status_code
-    #     # creating a city
-    #     new_city = self.app.post('/states/1/cities', data=dict(name='San Francisco'))
-    #     assert new_city.status_code == 200
-    #     # creating the same city in the same state
-    #     new_city = self.app.post('/states/1/cities', data=dict(name='San Francisco'))
-    #     assert new_city.status_code == 409
-    #
-    #     # creating a state
-    #     new_state = self.app.post('/states', data=dict(name='Oregon'))
-    #     assert new_state.status_code == 200
-    #     # print new_state.status_code
-    #     # creating the same city in different state
-    #     new_city = self.app.post('/states/2/cities', data=dict(name='San Francisco'))
-    #     assert new_city.status_code == 200
+    def test_create(self):
+        # creating a state
+        new_state = self.app.post('/states', data=dict(name='California'))
+        assert new_state.status_code == 200
+        # print new_state.status_code
+        # creating a city
+        new_city = self.app.post('/states/1/cities', data=dict(name='San Francisco'))
+        assert new_city.status_code == 200
+        # creating the same city in the same state
+        new_city = self.app.post('/states/1/cities', data=dict(name='San Francisco'))
+        assert new_city.status_code == 409
+
+        # creating a state
+        new_state = self.app.post('/states', data=dict(name='Oregon'))
+        assert new_state.status_code == 200
+        # print new_state.status_code
+        # creating the same city in different state
+        new_city = self.app.post('/states/2/cities', data=dict(name='San Francisco'))
+        assert new_city.status_code == 200
 
     def test_get(self):
         # creating a state
@@ -68,31 +68,32 @@ class city_test(unittest.TestCase):
 
         # getting city
         get_city = self.app.get('/states/1/cities?number=1&page=1')
-        # assert get_city.status_code == 200
+        assert get_city.status_code == 200
         print get_city.data
         get_city = self.app.get('/states/1/cities?number=1&page=2')
-        # assert get_city.status_code == 200
+        assert get_city.status_code == 200
         print get_city.data
 
         get_city = self.app.get('/states/1/cities?number=1&page=15')
-        # assert get_city.status_code == 200
+        assert get_city.status_code == 200
         print get_city.data
-    # def test_delete(self):
-    #     # creating a state
-    #     new_state = self.app.post('/states', data=dict(name='California'))
-    #     assert new_state.status_code == 200
-    #     # print new_state.status_code
-    #     # creating a city
-    #     new_city = self.app.post('/states/1/cities', data=dict(name='San Francisco'))
-    #     assert new_city.status_code == 200
-    #     # deleting the city
-    #     city_delete = self.app.delete('/states/1/cities/1')
-    #     assert city_delete.status_code == 200
-    #
-    # def test_city_state(self):
-    #     new_state = State(name="California")
-    #     new_state.save()
-    #     new_city = City(name="San Francisco", state=1)
-    #     new_city.save()
-    #     get_cities = self.app.get('/states/1/cities/1')
-    #     assert get_cities.status_code == 200
+        
+    def test_delete(self):
+        # creating a state
+        new_state = self.app.post('/states', data=dict(name='California'))
+        assert new_state.status_code == 200
+        # print new_state.status_code
+        # creating a city
+        new_city = self.app.post('/states/1/cities', data=dict(name='San Francisco'))
+        assert new_city.status_code == 200
+        # deleting the city
+        city_delete = self.app.delete('/states/1/cities/1')
+        assert city_delete.status_code == 200
+
+    def test_city_state(self):
+        new_state = State(name="California")
+        new_state.save()
+        new_city = City(name="San Francisco", state=1)
+        new_city.save()
+        get_cities = self.app.get('/states/1/cities/1')
+        assert get_cities.status_code == 200

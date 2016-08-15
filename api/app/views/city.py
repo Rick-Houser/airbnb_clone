@@ -27,7 +27,7 @@ def list_cities(state_id):
         city_name = request.form['name']
         new_city = City(name=city_name, state_id=id_state)
         new_city.save()
-        return "New city saved %s\n" % (new_city)
+        return "New city saved %s\n" % (new_city.name)
 
 
 @app.route('/states/<state_id>/cities/<city_id>', methods=['GET', 'DELETE'])

@@ -11,6 +11,8 @@ import peewee
     - before_request: establish database connection
     - after_request: close database connection
 '''
+
+
 @app.route('/', methods=['GET'])
 def index():
     return json_response(status='OK',
@@ -25,7 +27,8 @@ def before_request():
 def after_request():
     peewee.models.database.close()
 
-# Error handling
+
 @app.errorhandler(404)
+# Error handling
 def not_found(error):
     return make_response(jsonify({'code': '404', 'msg': 'not found'}), 404)
