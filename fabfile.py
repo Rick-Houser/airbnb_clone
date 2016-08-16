@@ -1,4 +1,5 @@
 from fabric.api import *
+# fab deploy_to_web1 deployWeb1 to deploy
 
 
 def deploy_to_web1():
