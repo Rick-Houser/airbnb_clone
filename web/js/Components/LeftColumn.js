@@ -8,8 +8,8 @@ class LeftColumn extends React.Component {
       minHeight: 'calc(100vh - 100px)'
     }
     var asideStyle = {
-     width: '300px',
-     backgroundColor: '#F6F6F6'
+      width: '300px',
+      backgroundColor: '#F6F6F6'
     }
     return(
       <div style={contentContainer}>
